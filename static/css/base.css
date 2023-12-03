@@ -1,0 +1,120 @@
+footer{
+    background-color:rgb(14, 14, 142);
+    width:full;
+    height:250px;
+}
+.margin{
+    margin-top:100px;
+}
+body{
+    background-color:rgb(233, 233, 233);
+}
+header{
+    height:100px;
+    background-color:rgb(14, 14, 142);
+}
+
+.card-border{
+    box-shadow:5px 12px 12px #c9c9c9;
+    border-radius:10px;
+}
+.productdetail-thumbnail{
+    height:610px;
+    background-color:white;
+    margin-left:px;
+    width:700px !important;
+}
+.productdetail-container{
+    width:150%;
+}
+.productdetail-desc{
+    margin-left:20px;
+    background-color:white;
+    margin-bottom:20px;
+}
+.productdetail-main-img{
+    width:600px;
+    margin-left:14px;
+}
+.sub-desc-outer{
+    position:relative;
+    width:full;
+    height:200px;
+    background-color:white;
+}
+.sub-desc{
+    margin-left:240px;
+    width:1066px;
+    height:100px;
+    position:absolute;
+    margin-top:50px;
+    background-color:#c9c9c9;
+}
+.sub-desc-margin{
+    margin-left:50px;
+}
+.container{
+    margin-bottom: 100px;
+}
+.mycart{
+    background-color:white;
+    margin-top:20px;
+}
+.order-detail{
+    background-color:white;
+}
+
+.checkout-item{
+    background-color:white;
+    margin-top:10px;
+    border-radius:10px;
+}
+.checkout-form{
+    background-color:white;
+    margin-top:10px;
+    border-radius:10px;
+}
+
+
+.detail-information{
+    background-color:white;
+    border-radius:10px;
+    margin-top:10px;
+}
+.previous-orders{
+    background-color:white;
+    border-radius:10px;
+    margin-top:10px;
+    margin-left:30px;
+}
+.adminbase-hover:hover{
+    text-decoration:none;
+    color:white;
+}
+.admin-card-white{
+    background-color:white;
+    border-radius:10px;
+}
+.btn-outline-primary:hover{
+    text-decoration:none;
+    color:white;
+}
+.search-bar{
+    
+    left:188px;
+}
+.card-white{
+    background-color:white;
+}
+.card{
+    transition:0.3s;
+}
+.card:hover{
+    box-shadow:1px 1px 16px  rgb(105, 105, 105);
+    transform: scale(1.01); 
+    z-index:1;
+}
+.home-product-title{
+    text-decoration:None;
+    
+}

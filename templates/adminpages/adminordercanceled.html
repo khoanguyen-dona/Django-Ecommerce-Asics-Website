@@ -1,0 +1,50 @@
+{% extends 'adminpages/adminbase.html' %}
+{% load humanize %}
+{% block title %} admin order canceled {% endblock title %}
+{% block content %}
+<div class="container mt-2" >
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminhome' %}">Home</a> 
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderlist' %}">All Orders</a> 
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderreceived' %}">Received Orders</a>
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderprocessing' %}">Processing Orders</a>
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderondelivery' %}">On delivery Orders</a>
+    <a class='btn btn-outline-success' href="{% url 'ecomapp:adminordercompleted' %}">Completed Orders</a>
+    <a class='btn btn-outline-danger active' href="{% url 'ecomapp:adminordercanceled' %}">Canceled Orders</a>
+
+    
+    <a href="{% url 'ecomapp:adminlogout' %}" class="float-right btn btn-danger " >Log out </a>
+
+    
+</div>
+<div class="container" >
+    <div class="row  admin-card-white card-border" >
+        <div class="col-md-12" >
+            <h3>Canceled Orders</h3>
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Ordered On</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in canceled_orders %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td> <a href="{% url 'ecomapp:adminorderdetail'  order.id %}" >  #ORDER_{{order.id}} </a>  </td>
+                        <td>{{order.ordered_by}}</td>
+                        <td>{{order.created_at}} ({{order.created_at|timesince}})</td>
+                        <td>{{order.total|intcomma}} đ</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

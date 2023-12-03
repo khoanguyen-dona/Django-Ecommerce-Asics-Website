@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{%  block title %}
+My cart
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row " >
+        <div class="col-md-12  card-border mycart py-3" >
+            <h4> Items in my cart</h4>
+            <table class="table"  >
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Rate</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>   
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cp in cart.cartproduct_set.all %}
+                    <tr  >
+                        <td>{{forloop.counter}}</td>
+                        <td>
+                            <img  class="img-fluid  " width="100px"  src="{{cp.product.image.url}}" alt="">
+                        </td>
+                        <td>{{cp.product.title}}</td>
+                        <td>{{cp.rate|intcomma}}</td>
+                        <td>{{cp.quantity}}</td>
+                        <td>{{cp.subtotal|intcomma}} đ</td>
+                        <td>
+                            <a href="{% url 'ecomapp:managecart' cp.id %}?action=inc" class="btn btn-outline-success">+</a>
+                            <a href="{% url 'ecomapp:managecart' cp.id %}?action=dcr" class="btn btn-outline-danger" >-</a>
+                            <a href="{% url 'ecomapp:managecart' cp.id %}?action=rmv" class="btn btn-outline-secondary" >x</a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th  colspan="5" class="text-right">Total:</th>
+                        <th>{{cart.total|intcomma}} đ</th>
+                        {% if cart.cartproduct_set.all %}
+                        <th> <a href="{% url 'ecomapp:emptycart' %}" class="btn btn-secondary btn-sm"> Delete all</a> </th>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+            
+            {% if cart.cartproduct_set.all %}
+            <tr>
+                <th>
+
+                    <a href="{% url 'ecomapp:checkout' %}" class="btn btn-success  btn-block btn-lg " >Check out</a>  
+                </th>
+            </tr>
+            
+            {% endif %}
+
+        </div>
+    </div> 
+
+</div>
+
+{%  endblock %}

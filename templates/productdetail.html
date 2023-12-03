@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}{{product.title}}{% endblock %}
+
+{% block content %}
+<style>
+
+.images{
+    /* object-fit:cover; */
+    /* max-width:200px;
+    max-height:100px; */
+    cursor:pointer;
+    opacity:0.5;
+    margin: 5px;
+    
+}
+.images:hover{
+    opacity:1;
+}
+.active{
+    opacity:1;
+}
+
+
+
+
+
+</style>
+
+
+
+
+<div class=" container" > 
+    
+    <h3>Product: {{product.title}}</h3>
+    <div class="row " >
+        
+        <div class="col-md-7 card-border productdetail-thumbnail " >
+            <img id="thumbnail" class="productdetail-main-img img-fluid mt-3" src="{{product.image.url}}" alt="">
+            <div class="row " >
+                
+                <div class="col-md-2" >
+                    <a href="{{product.image.url}}" >
+                        <img class="images active img-fluid"  src="{{product.image.url}}"  >
+                    </a>
+                </div>
+                {% for pi in product.productimage_set.all %}
+                <div class="col-md-2 " >
+                    <a href="{{pi.image.url}}" >
+                        <img  class="images img-fluid"  src="{{pi.image.url}}" alt="" >
+                    </a>
+                </div>
+                    {%  endfor %}
+            </div>
+        </div>            
+            
+
+
+        <div class="col-md-4 productdetail-desc  card-border py-2" >
+            <h4>{{product.title}}  </h4>
+            <p>(Viewed:{{product.view_count}}times)</p>
+            <h5>Category : {{product.category}}</h5>
+            <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
+            <a href="{% url 'ecomapp:addtocart'  product.id %}" class="btn btn-outline-primary" >Add to cart</a>
+            <hr>
+            <p>Warranty:{{product.warranty}} </p>
+            <p>Return policy:{{product.return_policy}}</p>
+            <hr>
+            <p>{{product.description}}</p>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="sub-desc-outer" >
+    <div class="sub-desc" >
+        <div>Thông tin sản phẩm</div>
+        <div>Đặc điểm kĩ thuật</div>
+    </div>
+</div>
+
+
+
+<script  type="text/javascript">
+    let images=document.getElementsByClassName('images')
+    let activeImages=document.getElementsByClassName('active')
+    for(var i=0;i<images.length; i++){
+        images[i].addEventListener('mouseover',function(){
+            console.log(activeImages)
+            if(activeImages.length>0){
+                activeImages[0].classList.remove('active')
+            }
+            this.classList.add('active')
+            document.getElementById('thumbnail').src=this.src
+        })
+    }
+    
+</script>
+
+{% endblock content %} 

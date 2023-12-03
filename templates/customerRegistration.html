@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Customer Registration{% endblock title %}
+{%  block content %}
+<style>
+    .errorlist{
+        color:red;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto" >
+            <h3>Đăng kí tài khoản </h3><hr>
+            <form action="" method="POST"  class="mb-3" >
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-primary" >Đăng kí</button>
+            </form>
+            <p>Đã có tài khoản ? <a href="{% url 'ecomapp:customerlogin' %}">Login tại đây!</a>  </p>
+            <p> Quên mật khẩu ? <a href="{% url 'ecomapp:passwordforgot'  %}">Reset lại mật khẩu!</a>  </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock content %}
