@@ -1,4 +1,5 @@
 {% extends 'base.html' %} {% load humanize %} 
+{% load static %}
 {% block title %} Home {% endblock%} 
 {% block content %}
 
@@ -17,11 +18,14 @@
           Price:
           <small><strike>{{p.marked_price|intcomma}}</strike></small>
           {{p.selling_price|intcomma}} đ
-        </p></strong
-      >
-      <a href="{% url 'ecomapp:addtocart'  p.id %}" class="btn btn-outline-primary mb-3"
-        >Add to cart</a
-      >
+        </p></strong>
+      <div>
+        <a href="{% url 'ecomapp:addtocart'  p.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a>
+        <a href="{% url 'ecomapp:addtocart'  p.id %}" class="ml-3  add-to-wishlist">
+          <img class="heart-icon"  src="{% static 'icon/heart-thin-icon.png' %}" alt=""></a>
+
+      </div>  
+
     </div>
     {% endfor %}
   </div>

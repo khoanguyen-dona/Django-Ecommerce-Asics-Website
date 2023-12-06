@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator
+
 # Create your models here.
 
 class Admin(models.Model):
@@ -24,13 +24,14 @@ class Customer(models.Model):
     def __str__(self):
         return self.full_name
 
+
 class Category(models.Model):
     title=models.CharField(max_length=200)
     slug=models.SlugField(unique=True)
 
     def __str__(self):
         return self.title
-    
+
 class Product(models.Model):
     title=models.CharField(max_length=200)
     slug=models.SlugField(unique=True)
@@ -45,7 +46,12 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title + '___#'+ str(self.id)
+
+class Wishlist(models.Model):
+    customer=models.ForeignKey(Customer,on_delete=models.CASCADE)
+    product=models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
         
+
 
 class ProductImage(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE)

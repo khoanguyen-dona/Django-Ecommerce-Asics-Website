@@ -141,6 +141,16 @@ class MyCartView(TemplateView):
             cart=None
         context['cart']=cart
         return context
+    
+class WishListView(TemplateView):
+    template_name='wishlist.html'
+
+
+
+class AddToWishListView(TemplateView):
+    def get(self,request,*args,**kwargs):
+        pre_url = request.META.get('HTTP_REFERER')
+        return redirect(pre_url)
 
 class CheckoutView(CreateView):
     template_name='checkout.html'

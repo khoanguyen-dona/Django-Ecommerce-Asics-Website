@@ -124,3 +124,15 @@ header{
     border-radius:1000px;
     object-fit: cover;
 }
+.add-to-cart{
+    width:75%;
+}
+.add-to-wishlist{
+    width:20%;
+}
+.heart-icon{
+    
+    width:30px;
+    height:30px;
+    margin-bottom:15px;
+}

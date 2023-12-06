@@ -17,6 +17,8 @@
         <a href="{% url 'ecomapp:contact' %}"class="text-white ml-2">Contact us </a>|
         <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a>|
         <a href="{% url 'ecomapp:mycart' %}"class="text-white ml-2">  Cart </a>|
+        <a href="{% url 'ecomapp:wishlist' %}"class="text-white ml-2">  Wish list </a>|
+
         
         {% if request.user.customer %}
         <a href="{% url 'ecomapp:customerlogout' %}" class="mt-1 btn btn-danger opacity-2 float-right ml-2  " >Log out</a>
