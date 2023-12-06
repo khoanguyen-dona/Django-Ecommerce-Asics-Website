@@ -26,6 +26,7 @@ class CheckoutForm(forms.ModelForm):
 
 
 class CustomerRegistrationForm(forms.ModelForm):
+
     username=forms.CharField(widget=forms.TextInput(attrs={
         'class':'form-control'
     }))
@@ -41,11 +42,13 @@ class CustomerRegistrationForm(forms.ModelForm):
     address=forms.CharField(widget=forms.TextInput(attrs={
         'class':'form-control'
     }))
-
-
+    avatar=forms.ImageField(widget=forms.FileInput(attrs={
+        'class':'form-control'
+    }))
+    
     class Meta:
-        model=Customer 
-        fields=['username','password','email','full_name','address']
+            model=Customer
+            fields=['username','password','email','full_name','address','avatar']
         
     def clean_username(self):
         uname=self.cleaned_data.get('username')

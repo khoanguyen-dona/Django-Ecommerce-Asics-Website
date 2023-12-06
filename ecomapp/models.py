@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Admin(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     full_name=models.CharField(max_length=50)
-    image=models.ImageField(upload_to='admins')
+    image=models.ImageField(upload_to='admins_avatar')
     mobile=models.CharField(max_length=20)
 
     def __str__(self):
@@ -18,6 +18,7 @@ class Customer(models.Model):
     full_name=models.CharField(max_length=200)
     address=models.CharField(max_length=200,null=True,blank=True)
     joined_on=models.DateTimeField(auto_now_add=True)
+    avatar=models.ImageField(upload_to='customer_avatar',blank=True,null=True)
 
     def __str__(self):
         return self.full_name

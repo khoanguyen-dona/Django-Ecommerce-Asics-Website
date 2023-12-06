@@ -21,7 +21,7 @@
         {% if request.user.customer %}
         <a href="{% url 'ecomapp:customerlogout' %}" class="mt-1 btn btn-danger opacity-2 float-right ml-2  " >Log out</a>
         <a href="{% url 'ecomapp:customerprofile' %}" class="mt-1  btn btn-outline-light float-right rounded " >My profile</a>
-
+        <img class="img-fluid avatar float-right  mr-2" src="{{request.user.customer.avatar.url}}" alt="">
         <p class="float-right text-white mr-3" >Xin chào {{request.user.customer}} ! </p>
         {%  else %}
         <a href="{% url 'ecomapp:customerlogin' %}" class="btn btn-outline-light float-right mt-1 shadow" >Log in</a>
