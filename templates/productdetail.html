@@ -33,16 +33,16 @@
 
 <div class=" container" > 
     
-    <h3>Product: {{product.title}}</h3>
-    <div class="row " >
+    
+    <div class="row mt-5" >
         
         <div class="col-md-7 card-border productdetail-thumbnail " >
-            <img id="thumbnail" class="productdetail-main-img img-fluid mt-3" src="{{product.image.url}}" alt="">
+            <img id="thumbnail" class="productdetail-main-img img-fluid mt-3" src="{{product.thumbnail.url}}" alt="">
             <div class="row " >
                 
                 <div class="col-md-2" >
-                    <a href="{{product.image.url}}" >
-                        <img class="images active img-fluid"  src="{{product.image.url}}"  >
+                    <a href="{{product.thumbnail.url}}" >
+                        <img class="images active img-fluid"  src="{{product.thumbnail.url}}"  >
                     </a>
                 </div>
                 {% for pi in product.productimage_set.all %}

@@ -77,7 +77,7 @@ class ProductForm(forms.ModelForm):
    
     class Meta:
         model=Product
-        fields=['title','slug','category','image','marked_price','selling_price','description','warranty','return_policy']
+        fields=['title','slug','category','thumbnail','marked_price','selling_price','description','warranty','return_policy']
         widgets={
             'title':forms.TextInput(attrs={
                 'class':'form-control'
@@ -89,9 +89,8 @@ class ProductForm(forms.ModelForm):
             'category':forms.Select(attrs={
                 'class':'form-control'
             }),
-            'image':forms.ClearableFileInput(attrs={ 
-
-                # 'multiple':False
+            'thumbnail':forms.ClearableFileInput(attrs={ 
+                
             }),
             'marked_price':forms.NumberInput(attrs={
                 'class':'form-control'

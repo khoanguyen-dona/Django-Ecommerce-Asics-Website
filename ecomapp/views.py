@@ -168,28 +168,29 @@ class CheckoutView(CreateView):
             del self.request.session['cart_id']
             messages.success(self.request,'Đặt hàng thành công!')
 
-            cart_product_obj=CartProduct.objects.get(cart=cart_obj)
-            price=cart_product_obj.product.selling_price
-            quantity=cart_product_obj.quantity
-            email=self.request.user.email
-            text_content='Thông báo xác nhận đơn hàng '
-            html_content='''
-            <html>
-            <body>    
+            # cart_product_obj=CartProduct.objects.get(cart=cart_obj)
+            # price=cart_product_obj.product.selling_price
+            # quantity=cart_product_obj.quantity
+
+            # email=self.request.user.email
+            # text_content='Thông báo xác nhận đơn hàng '
+            # html_content='''
+            # <html>
+            # <body>    
             
-            <p> ASICS VIETNAM đã nhận được thông tin đặt hàng của bạn +{{cart_product_obj.product.title}} </p>
-            <p> Giá: {{cart_product_obj.product.price}}</p>
+            # <p> ASICS VIETNAM đã nhận được thông tin đặt hàng của bạn +{{cart_product_obj.product.title}} </p>
+            # <p> Giá: {{cart_product_obj.product.price}}</p>
             
-            </body>
-            </html>
-            '''
-            send_mail(
-                'Asics Viet Nam',
-                text_content+html_content,
-                settings.EMAIL_HOST_USER,
-                [email],
-                fail_silently=False,
-            )
+            # </body>
+            # </html>
+            # '''
+            # send_mail(
+            #     'Asics Viet Nam',
+            #     text_content+html_content,
+            #     settings.EMAIL_HOST_USER,
+            #     [email],
+            #     fail_silently=False,
+            # )
         else:
             return redirect('ecomapp:home')
         return super().form_valid(form)
