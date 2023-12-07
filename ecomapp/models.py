@@ -47,12 +47,19 @@ class Product(models.Model):
     def __str__(self):
         return self.title + '___#'+ str(self.id)
 
-class Wishlist(models.Model):
-    customer=models.ForeignKey(Customer,on_delete=models.CASCADE)
-    product=models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+class WishList(models.Model):
+    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,blank=True)
+    
+
+    def __str__(self):
+        return 'wishlist :'+str(self.id)
         
+class WishListItem(models.Model):
+    wishlist=models.ForeignKey(WishList,on_delete=models.CASCADE)
+    product=models.ForeignKey(Product,on_delete=models.CASCADE)
 
-
+    def __str__(self):
+        return  'wish list : '+str(self.wishlist.id) + 'wish_list_item :'+str(self.id)
 class ProductImage(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     image=models.ImageField(upload_to='products/images/')

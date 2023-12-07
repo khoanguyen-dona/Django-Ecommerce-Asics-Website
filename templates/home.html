@@ -4,6 +4,8 @@
 {% block content %}
 
 <div class="container">
+  <h3 class="mt-2" >Home</h3>
+  <hr>
   <div class="row mt-5">
     {% for p in product_list %}
     <div class="col-md-3 card ml-1 mt-1" style="left: 300px">
@@ -21,9 +23,15 @@
         </p></strong>
       <div>
         <a href="{% url 'ecomapp:addtocart'  p.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a>
-        <a href="{% url 'ecomapp:addtocart'  p.id %}" class="ml-3  add-to-wishlist">
-          <img class="heart-icon"  src="{% static 'icon/heart-thin-icon.png' %}" alt=""></a>
-
+        {%  if p in wishlist.wishlistitem_set.all %}
+        <a href="{% url 'ecomapp:addtowishlist'  p.id %}" class="ml-3 add-to-wishlist ">
+          <img class="heart-icon "  src="{% static 'icon/red-heart-icon.png' %}" alt="">
+        </a>
+        {% else %}
+        <a href="{% url 'ecomapp:addtowishlist'  p.id %}" class="ml-3 add-to-wishlist ">
+          <img class="heart-icon "  src="{% static 'icon/heart-thin-icon.png' %}" alt="">
+        </a>
+        {%  endif %}
       </div>  
 
     </div>

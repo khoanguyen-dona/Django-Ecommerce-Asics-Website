@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 app_name='ecomapp'
 urlpatterns=[
+    # store------------------
     path('',HomeView.as_view(),name='home'),
     path('about/',AboutView.as_view(),name='about'),
     path('contact-us/',ContactView.as_view(),name='contact'),
@@ -10,7 +11,9 @@ urlpatterns=[
     path('add-to-cart-<int:pro_id>/',AddToCartView.as_view(),name='addtocart'),
     path('my-cart/',MyCartView.as_view(),name='mycart'),
     path('wish-list/',WishListView.as_view(),name='wishlist'),
-    path('add-to-wishlist',AddToWishListView.as_view(),name='addtowishlist'),
+    path('add-to-wishlist-<int:pro_id>/',AddToWishListView.as_view(),name='addtowishlist'),
+    path('remove-from-wishlist-<int:pro_id>/',RemoveFromWishListView.as_view(),name='removefromwishlist'),
+
     path('manage-cart/<int:cp_id>/',ManageCartView.as_view(),name='managecart'),
     path('empty-cart/',EmptyCartView.as_view(),name='emptycart'),
     path('checkout/',CheckoutView.as_view(),name='checkout'),
@@ -23,6 +26,7 @@ urlpatterns=[
     path('forgot-password/',PasswordForgotView.as_view(),name='passwordforgot'),
     path('password-reset/<email>/<token>/',PasswordResetView.as_view(),name='passwordreset'),
 
+# admin------------
     path('admin-login/',AdminLoginView.as_view(),name='adminlogin'),
     path('admin-home/',AdminHomeView.as_view(),name='adminhome'),
     path('admin-order-<int:pk>/',AdminOrderDetailView.as_view(),name='adminorderdetail'),

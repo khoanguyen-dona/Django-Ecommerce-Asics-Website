@@ -17,10 +17,12 @@ class HomeView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+        wishlist=WishList.objects.all()
         all_products=Product.objects.all().order_by('-id')
         paginator=Paginator(all_products,12)
         page_number=self.request.GET.get('page')
         product_list=paginator.get_page(page_number)
+        context['wishlist']=wishlist
         context['product_list']=product_list
         return context
 
@@ -145,13 +147,63 @@ class MyCartView(TemplateView):
 class WishListView(TemplateView):
     template_name='wishlist.html'
 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_id=self.request.session.get('wishlist_id',None)
+        if wishlist_id:
+            wishlist=WishList.objects.get(id=wishlist_id)
+        else:
+            wishlist=None
+        context['wishlist']=wishlist
+        return context
+
 
 
 class AddToWishListView(TemplateView):
     def get(self,request,*args,**kwargs):
         pre_url = request.META.get('HTTP_REFERER')
+        product_id=self.kwargs['pro_id']
+        # product in database
+        product_obj=Product.objects.get(id=product_id)
+        # wishlist_id session
+        wishlist_id=self.request.session.get("wishlist_id", None)
+        # nếu wishlist_session đã tồn tại thì dùng nó
+        if WishList.objects.filter(id=wishlist_id).exists():
+            wishlist_obj=WishList.objects.get(id=wishlist_id)
+
+            item_in_wishlist=wishlist_obj.wishlistitem_set.filter(product=product_obj)
+            # sản phẩm có trong cart thì không tạo mới,thực hiện logic + thêm
+            if item_in_wishlist.exists():
+                wishlist_item=item_in_wishlist.last()
+                wishlist_item.save()
+                wishlist_obj.save()
+            # sản phẩm chưa từng xuất hiện trong cart ta tạo mới
+            else:
+                wishlist_item=WishListItem.objects.create(wishlist=wishlist_obj,product=product_obj)
+                wishlist_obj.save()
+
+        # if wishlist_session chưa có thì tạo mới
+        else:
+            wishlist_obj=WishList.objects.create()
+            self.request.session['wishlist_id']=wishlist_obj.id
+
+            if self.request.user.is_authenticated:
+                wishlist_obj.customer=self.request.user.customer
+
+            wishlist_obj.save()
+        messages.success(request, 'Sản phẩm đã được thêm vào yêu thích !')
+
         return redirect(pre_url)
 
+class RemoveFromWishListView(TemplateView):
+    def get(self,request,*args,**kwargs):
+        pre_url = request.META.get('HTTP_REFERER')
+        product_id=self.kwargs['pro_id']
+        product_obj=Product.objects.get(id=product_id)
+        wishlistitem_obj=WishListItem.objects.get(product=product_obj)
+        wishlistitem_obj.delete()
+
+        return redirect(pre_url)
 class CheckoutView(CreateView):
     template_name='checkout.html'
     form_class=CheckoutForm
@@ -325,8 +377,8 @@ class CustomerProfileView(CustomerRequiredMixin,TemplateView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
         customer=self.request.user.customer
-        context['customer']=customer
         orders=Order.objects.filter(cart__customer=customer).order_by('-id')
+        context['customer']=customer
         context['orders']=orders
         return context
     
