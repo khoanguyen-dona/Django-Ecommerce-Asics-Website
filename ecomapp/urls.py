@@ -12,7 +12,7 @@ urlpatterns=[
     path('my-cart/',MyCartView.as_view(),name='mycart'),
     path('wish-list/',WishListView.as_view(),name='wishlist'),
     path('add-to-wishlist-<int:pro_id>/',AddToWishListView.as_view(),name='addtowishlist'),
-    path('remove-from-wishlist-<int:pro_id>/',RemoveFromWishListView.as_view(),name='removefromwishlist'),
+    path('remove-from-wishlist-<int:wli_id>/',RemoveFromWishListView.as_view(),name='removefromwishlist'),
 
     path('manage-cart/<int:cp_id>/',ManageCartView.as_view(),name='managecart'),
     path('empty-cart/',EmptyCartView.as_view(),name='emptycart'),

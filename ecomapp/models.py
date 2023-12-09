@@ -49,10 +49,10 @@ class Product(models.Model):
 
 class WishList(models.Model):
     customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,blank=True)
-    
+    count=models.IntegerField(null=True,blank=True)
 
-    def __str__(self):
-        return 'wishlist :'+str(self.id)
+    def __str__(self):      
+        return 'wishlist :'+str(self.id)    
         
 class WishListItem(models.Model):
     wishlist=models.ForeignKey(WishList,on_delete=models.CASCADE)
@@ -71,6 +71,7 @@ class Cart(models.Model):
     customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True)
     total=models.BigIntegerField(default=0)
     created_at=models.DateTimeField(auto_now_add=True)
+    count=models.IntegerField(null=True,blank=True)
 
     def __str__(self):
         return 'cart :'+str(self.id)

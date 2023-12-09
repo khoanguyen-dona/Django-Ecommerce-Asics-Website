@@ -10,20 +10,31 @@ from .utils import password_reset_token
 from django.core.mail import send_mail
 from django.conf import settings
 
-
-
 class HomeView(TemplateView):
     template_name='home.html'
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        wishlist=WishList.objects.all()
+
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None    
+
         all_products=Product.objects.all().order_by('-id')
         paginator=Paginator(all_products,12)
         page_number=self.request.GET.get('page')
         product_list=paginator.get_page(page_number)
+        context['cart']=cart
         context['wishlist']=wishlist
-        context['product_list']=product_list
+        context['product_list']=product_list    
         return context
 
 class AllProductsView(TemplateView):
@@ -57,29 +68,31 @@ class AddToCartView(TemplateView):
         # product in database
         product_obj=Product.objects.get(id=product_id)
         # cart id session
-        cart_id=self.request.session.get("cart_id", None)
+        cart_session=self.request.session.get("cart_session", None)
         # if cart already exist 
-        if Cart.objects.filter(id=cart_id).exists():
-            cart_obj=Cart.objects.get(id=cart_id)
-            this_product_in_cart=cart_obj.cartproduct_set.filter(product=product_obj)
+        if cart_session:
+            cart_obj=Cart.objects.get(id=cart_session)
+            item_in_cart=cart_obj.cartproduct_set.filter(product=product_obj)
             # sản phẩm có trong cart thì không tạo mới,thực hiện logic + thêm
-            if this_product_in_cart.exists():
-                cartproduct=this_product_in_cart.last()
+            if item_in_cart.exists():
+                cartproduct=item_in_cart.last()
                 cartproduct.quantity+=1
                 cartproduct.subtotal+=product_obj.selling_price
                 cartproduct.save()
                 cart_obj.total+=product_obj.selling_price
+                cart_obj.count+=1
                 cart_obj.save()
             # sản phẩm chưa từng xuất hiện trong cart ta tạo mới
             else:
                 cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
                         rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price)
                 cart_obj.total+=product_obj.selling_price
+                cart_obj.count+=1
                 cart_obj.save()
         # create new cart if deos no  exits
         else:
-            cart_obj=Cart.objects.create(total=0)
-            self.request.session['cart_id']=cart_obj.id
+            cart_obj=Cart.objects.create(total=0,count=1)
+            self.request.session['cart_session']=cart_obj.id
             cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,rate=product_obj.selling_price,
                                                    quantity=1,subtotal=product_obj.selling_price)
             cart_obj.total+=product_obj.selling_price
@@ -87,6 +100,7 @@ class AddToCartView(TemplateView):
                 cart_obj.customer=self.request.user.customer
 
             cart_obj.save()
+            cartproduct.save()
         messages.success(request, 'Sản phẩm đã được thêm vào giỏ hàng !')
 
         return redirect(pre_url)
@@ -104,17 +118,20 @@ class ManageCartView(TemplateView):
             cp_obj.subtotal+=cp_obj.rate
             cp_obj.save()
             cart_obj.total+=cp_obj.rate
+            cart_obj.count+=1
             cart_obj.save()
         elif action=='dcr':
             cp_obj.quantity-=1
             cp_obj.subtotal-=cp_obj.rate
             cp_obj.save()
             cart_obj.total-=cp_obj.rate
+            cart_obj.count-=1
             cart_obj.save()
             if cp_obj.quantity<=0:
                 cp_obj.delete()
         elif action=='rmv':
             cart_obj.total-=cp_obj.subtotal
+            cart_obj.count=cart_obj.count-cp_obj.quantity
             cart_obj.save()
             cp_obj.delete()
         else:
@@ -123,11 +140,12 @@ class ManageCartView(TemplateView):
 
 class EmptyCartView(TemplateView):
     def get(self,request,*args,**kwargs):
-        cart_id=request.session.get('cart_id',None)
-        if cart_id:
-            cart=Cart.objects.get(id=cart_id)
+        cart_session=request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
             cart.cartproduct_set.all().delete()
             cart.total=0
+            cart.count=0
             cart.save()
         return redirect('ecomapp:mycart')
 
@@ -136,9 +154,9 @@ class MyCartView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        cart_id=self.request.session.get('cart_id',None)
-        if cart_id:
-            cart=Cart.objects.get(id=cart_id)
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
         else:
             cart=None
         context['cart']=cart
@@ -149,61 +167,76 @@ class WishListView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        wishlist_id=self.request.session.get('wishlist_id',None)
-        if wishlist_id:
-            wishlist=WishList.objects.get(id=wishlist_id)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
         else:
             wishlist=None
         context['wishlist']=wishlist
         return context
 
-
-
 class AddToWishListView(TemplateView):
+
     def get(self,request,*args,**kwargs):
         pre_url = request.META.get('HTTP_REFERER')
         product_id=self.kwargs['pro_id']
         # product in database
         product_obj=Product.objects.get(id=product_id)
         # wishlist_id session
-        wishlist_id=self.request.session.get("wishlist_id", None)
+        wishlist_session=self.request.session.get("wishlist_session", None)
         # nếu wishlist_session đã tồn tại thì dùng nó
-        if WishList.objects.filter(id=wishlist_id).exists():
-            wishlist_obj=WishList.objects.get(id=wishlist_id)
-
+        if wishlist_session:
+            wishlist_obj=WishList.objects.get(id=wishlist_session)
             item_in_wishlist=wishlist_obj.wishlistitem_set.filter(product=product_obj)
-            # sản phẩm có trong cart thì không tạo mới,thực hiện logic + thêm
+            # sản phẩm có trong wishlist thì không tạo mới,bỏ qua
             if item_in_wishlist.exists():
-                wishlist_item=item_in_wishlist.last()
-                wishlist_item.save()
-                wishlist_obj.save()
-            # sản phẩm chưa từng xuất hiện trong cart ta tạo mới
+                pass
+            # sản phẩm chưa từng xuất hiện trong wishlist ta tạo mới
             else:
-                wishlist_item=WishListItem.objects.create(wishlist=wishlist_obj,product=product_obj)
+                WishListItem.objects.create(wishlist=wishlist_obj,product=product_obj)
+                wishlist_obj.count+=1
                 wishlist_obj.save()
 
         # if wishlist_session chưa có thì tạo mới
         else:
-            wishlist_obj=WishList.objects.create()
-            self.request.session['wishlist_id']=wishlist_obj.id
-
+            wishlist_obj=WishList.objects.create(count=1)
+            self.request.session['wishlist_session']=wishlist_obj.id
+            WishListItem.objects.create(wishlist=wishlist_obj,product=product_obj)
             if self.request.user.is_authenticated:
                 wishlist_obj.customer=self.request.user.customer
 
             wishlist_obj.save()
+    
         messages.success(request, 'Sản phẩm đã được thêm vào yêu thích !')
 
         return redirect(pre_url)
+ 
+# class RemoveFromWishListView(TemplateView):
+#     def get(self,request,*args,**kwargs):
+#         pre_url = request.META.get('HTTP_REFERER')
+#         wishlistitem_id=self.kwargs['wli_id']
+#         wishlistitem_obj=WishListItem.objects.get(id=wishlistitem_id)
+#         wishlistitem_obj.delete()
+
+#         return redirect(pre_url)
+    
 
 class RemoveFromWishListView(TemplateView):
     def get(self,request,*args,**kwargs):
         pre_url = request.META.get('HTTP_REFERER')
-        product_id=self.kwargs['pro_id']
-        product_obj=Product.objects.get(id=product_id)
-        wishlistitem_obj=WishListItem.objects.get(product=product_obj)
+        wishlistitem_id=self.kwargs['wli_id']
+        wishlistitem_obj=WishListItem.objects.get(id=wishlistitem_id)
         wishlistitem_obj.delete()
 
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        wishlist_obj=WishList.objects.get(id=wishlist_session)
+        wishlist_obj.count-=1
+        wishlist_obj.save()
+        
+
+
         return redirect(pre_url)
+    
 class CheckoutView(CreateView):
     template_name='checkout.html'
     form_class=CheckoutForm
@@ -291,13 +324,22 @@ class CustomerLoginView(FormView):
             login(self.request, usr)
             messages.success(self.request,'Đăng nhập thành công!')
             cart_id=self.request.session.get('cart_id',None)
+            # wishlist_id=self.request.session.get('wishlist_id',None)
             if cart_id:
-                self.request.session['cart_id']
+                self.request.session['cart_id']  
                 cart_obj=Cart.objects.get(id=cart_id)
                 cart_obj.customer=self.request.user.customer    
-                cart_obj.save()      
-            else :
-                pass
+                cart_obj.save() 
+            # if wishlist_id:
+            #     self.request.session['wishlist_id']
+            #     wishlist_obj=WishList.objects.get(id=wishlist_id)
+            #     wishlist_obj.customer=self.request.user.customer
+            #     wishlist_obj.save()
+            # else :
+                # cart_obj=Cart.objects.get(customer=self.request.user.customer)
+                # cart_obj.save()
+                # wishlist_obj=WishList.objects.get(customer=self.request.user.customer)
+                # wishlist_obj.save()
         else: 
             return render(self.request,self.template_name,{'form':self.form_class,'error1':'Không hợp lệ'})
         return super().form_valid(form)
