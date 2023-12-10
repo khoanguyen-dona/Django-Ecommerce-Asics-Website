@@ -42,7 +42,21 @@ class AllProductsView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None   
         context['allcategories']=Category.objects.all()
+        context['wishlist']=wishlist
+        context['cart']=cart
         return context
 
 # class ProductDetailView(TemplateView):
@@ -154,12 +168,21 @@ class MyCartView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
         cart_session=self.request.session.get('cart_session',None)
         if cart_session:
             cart=Cart.objects.get(id=cart_session)
         else:
-            cart=None
+            cart=None   
+
         context['cart']=cart
+        context['wishlist']=wishlist
         return context
     
 class WishListView(TemplateView):
@@ -172,7 +195,15 @@ class WishListView(TemplateView):
             wishlist=WishList.objects.get(id=wishlist_session)
         else:
             wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None   
+
         context['wishlist']=wishlist
+        context['cart']=cart
         return context
 
 class AddToWishListView(TemplateView):
@@ -244,23 +275,36 @@ class CheckoutView(CreateView):
     
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        cart_id=self.request.session.get('cart_id',None)
-        if cart_id:
-            cart_obj=Cart.objects.get(id=cart_id)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
         else:
-            cart_obj=None
-        context['cart']=cart_obj
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None   
+
+        # cart_session=self.request.session.get('cart_session',None)
+        # if cart_session:
+        #     cart_obj=Cart.objects.get(id=cart_session)
+        # else:
+        #     cart_obj=None
+        context['cart']=cart
+        context['wishlist']=wishlist
         return context
     def form_valid(self, form):
-        cart_id=self.request.session.get('cart_id')
-        if cart_id:
-            cart_obj=Cart.objects.get(id=cart_id)
+        cart_session=self.request.session.get('cart_session')
+        if cart_session:
+            cart_obj=Cart.objects.get(id=cart_session)
             form.instance.cart=cart_obj
             form.instance.subtotal=cart_obj.total
             form.instance.discount=0
             form.instance.total=cart_obj.total
             form.instance.order_status="Order received"
-            del self.request.session['cart_id']
+            del self.request.session['cart_session']
             messages.success(self.request,'Đặt hàng thành công!')
 
             # cart_product_obj=CartProduct.objects.get(cart=cart_obj)
@@ -295,6 +339,23 @@ class CustomerRegistrationView(CreateView):
     form_class=CustomerRegistrationForm
     success_url=reverse_lazy('ecomapp:customerlogin')
 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context 
+
     def form_valid(self,form):
         username=form.cleaned_data.get('username')
         password=form.cleaned_data.get('password')
@@ -315,6 +376,22 @@ class CustomerLoginView(FormView):
     template_name='customerLogin.html'
     form_class=CustomerLoginForm
     success_url=reverse_lazy('ecomapp:home')    
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context   
 
     def form_valid(self,form):
         uname=form.cleaned_data.get('username')
@@ -323,11 +400,11 @@ class CustomerLoginView(FormView):
         if usr is not None and Customer.objects.filter(user=usr).exists():
             login(self.request, usr)
             messages.success(self.request,'Đăng nhập thành công!')
-            cart_id=self.request.session.get('cart_id',None)
+            cart_session=self.request.session.get('cart_session',None)
             # wishlist_id=self.request.session.get('wishlist_id',None)
-            if cart_id:
-                self.request.session['cart_id']  
-                cart_obj=Cart.objects.get(id=cart_id)
+            if cart_session:
+                self.request.session['cart_session']  
+                cart_obj=Cart.objects.get(id=cart_session)
                 cart_obj.customer=self.request.user.customer    
                 cart_obj.save() 
             # if wishlist_id:
@@ -349,6 +426,23 @@ class PasswordForgotView(FormView):
     form_class=PasswordForgotForm
     success_url='/forgot-password/?m=s'
 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context 
+    
     def form_valid(self,form):
         # lấy email từ user
         email=form.cleaned_data.get('email')
@@ -375,6 +469,23 @@ class PasswordResetView(FormView):
     form_class=PasswordResetForm
     success_url='/login/'
 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context 
+
     def dispatch(self,request,*args,**kwargs):
         email=self.kwargs.get('email')
         user=User.objects.get(email=email)
@@ -399,9 +510,41 @@ class PasswordResetView(FormView):
 
 class AboutView(TemplateView):
     template_name='about.html' 
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None  
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context
 
 class ContactView(TemplateView):
     template_name='contactus.html'
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None  
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context
 
 # customer------------------
 # phai co tai khoan moi xem profile duoc,ngăn chặn việc customer quay trở lại sau bằng nút go back sau khi logout vẫn xem thông tin cũ được
@@ -416,10 +559,24 @@ class CustomerRequiredMixin(object):
 
 class CustomerProfileView(CustomerRequiredMixin,TemplateView):
     template_name='customerprofile.html'
+    
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
         customer=self.request.user.customer
         orders=Order.objects.filter(cart__customer=customer).order_by('-id')
+        context['wishlist']=wishlist
+        context['cart']=cart
         context['customer']=customer
         context['orders']=orders
         return context
@@ -429,8 +586,21 @@ class CustomerOrderDetailView(CustomerRequiredMixin,TemplateView):
     template_name='customerorderdetail.html'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if wishlist_session:
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if cart_session:
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
         order_id=self.kwargs['pk']
         order_obj=Order.objects.get(id=order_id)
+        context['wishlist']=wishlist
+        context['cart']=cart
         context['order_obj']=order_obj
         return context
     # ngăn chặn customer thay đổi path trên http để xem thông tin order khác,customer chỉ xem được order mà mình đã đặt

@@ -4,13 +4,14 @@
 {% block content %}
 <div class="container  " >
     <div  class="row " >
-        <div class="col-md-6 card-border checkout-item py-2" > 
+        <div class="col-md-7 card-border checkout-item py-2" > 
             <h3>Items in the cart</h3>
-            <a href="{% url 'ecomapp:mycart' %}" class="btn btn-secondary mb-3"  >Update Cart</a>
+            
             <table class="table"  >
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Product</th>
                         <th>Rate</th>
                         <th>Quantity</th>
@@ -21,20 +22,21 @@
                     {% for cp in cart.cartproduct_set.all %}
                     <tr>
                         <td>{{forloop.counter}}</td>
+                        <td><img class="img-fluid" style="width:100px;" src="{{cp.product.thumbnail.url}}" alt=""></td>
                         <td>{{cp.product.title}}</td>
-                        <td>{{cp.rate|intcomma}}</td>
+                        <td>{{cp.rate|intcomma}} đ</td>
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal|intcomma}} đ</td>
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th colspan="4" class="text-right" >Total:</th>
-                        <th>{{cart.total|intcomma}} đ</th>
+                        <th colspan="5" class=" text-right" >Total:</th>
+                        <th >{{cart.total|intcomma}} đ</th>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="col-lg-5 card-border checkout-form ml-4  py-2" >
+        <div class="col-lg-4 card-border checkout-form ml-4  py-2" >
             <h3>Checkout Form</h3>
             <form action=""  method="POST">
                 {% csrf_token  %}  
