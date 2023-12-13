@@ -18,7 +18,7 @@
     
 </div>
 <div class="container " >
-    <div class="row  admin-card-white card-border py-3 " >
+    <div class="row  admin-card-white card-border " >
         <div class="col-md-12  " >
             <h3>Unprocessed Orders</h3>
             <table class="table" >
@@ -29,16 +29,18 @@
                         <th>Customer</th>
                         <th>Ordered On</th>
                         <th>Amount</th>
+                        <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in pendingorders %}
+                    {% for order in unprocessedorders %}
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td> <a href="{% url 'ecomapp:adminorderdetail'  order.id %}" >  #ORDER_{{order.id}} </a>  </td>
                         <td>{{order.ordered_by}}</td>
                         <td>{{order.created_at}} ({{order.created_at|timesince}})</td>
                         <td>{{order.total|intcomma}} đ</td>
+                        <td> <a href="{% url 'ecomapp:admindeleteorder'  order.id %}"  class="btn btn-block btn-outline-secondary">x</a> </td>
                     </tr>
                     {% endfor %}
                 </tbody>

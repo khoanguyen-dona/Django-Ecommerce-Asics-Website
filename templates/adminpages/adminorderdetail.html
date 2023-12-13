@@ -2,6 +2,22 @@
 {% load humanize %}
 {% block title %} Order detail {% endblock title %}
 {% block content %}
+
+<div class="container mt-2" >
+    <a class='btn btn-outline-primary active' href="{% url 'ecomapp:adminhome' %}">Home</a> 
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderlist' %}">All Orders</a> 
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderreceived' %}">Received Orders</a>
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderprocessing' %}">Processing Orders</a>
+    <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderondelivery' %}">On delivery Orders</a>
+    <a class='btn btn-outline-success' href="{% url 'ecomapp:adminordercompleted' %}">Completed Orders</a>
+    <a class='btn btn-outline-danger' href="{% url 'ecomapp:adminordercanceled' %}">Canceled Orders</a>
+
+    
+    <a href="{% url 'ecomapp:adminlogout' %}" class="float-right btn btn-danger " >Log out </a>
+</div>
+
+
+
 <div class="container" >
     <div class="row  admin-card-white card-border py-3 mt-3" >
         <div class="col-md-8 mx-auto" >
@@ -39,12 +55,12 @@
             </table>
             <form action="{% url 'ecomapp:adminorderstatuschange' order_obj.id %}"  method="POST">
                 {% csrf_token %}
-                <select name="status" id="">
+                <select name="status" id="" class="btn btn-secondary"    >
                     {% for i,j in allstatus %}  
                     <option value="{{i}}" {% if i == order_obj.order_status %}selected{% endif %} >{{j}}</option>              
                     {% endfor %}
                 </select>
-                <button class="btn btn-sm btn-info" type="submit">Change</button>
+                <button class="btn  btn-primary" type="submit">Update</button>
             </form>
         </div>
 

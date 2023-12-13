@@ -28,6 +28,7 @@
                         <th>Customer</th>
                         <th>Ordered On</th>
                         <th>Amount</th>
+                        <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,7 @@
                         <td>{{order.ordered_by}}</td>
                         <td>{{order.created_at}} ({{order.created_at|timesince}})</td>
                         <td>{{order.total|intcomma}} đ</td>
+                        <td> <a href="{% url 'ecomapp:admindeleteorder'  order.id %}"  class="btn btn-block btn-outline-secondary">x</a> </td>  
                     </tr>
                     {% endfor %}
                 </tbody>

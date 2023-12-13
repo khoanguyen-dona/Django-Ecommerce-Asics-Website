@@ -563,6 +563,7 @@ class ContactView(TemplateView):
         return context
 
 # customer------------------
+
 # phai co tai khoan moi xem profile duoc,ngăn chặn việc customer quay trở lại sau bằng nút go back sau khi logout vẫn xem thông tin cũ được
 # customer không thể nhấn nút go back để xem thông tin trong profile cũ,phải đăng nhập lại trang login mới xem dược
 class CustomerRequiredMixin(object):
@@ -628,10 +629,8 @@ class CustomerOrderDetailView(CustomerRequiredMixin,TemplateView):
         return super().dispatch(request,**kwargs)
     
 
+# admin--------------------------------
 
-
-
-# admin------------------------
 class AdminLoginView(FormView):
     template_name='adminpages/adminlogin.html'
     form_class=CustomerLoginForm
@@ -666,7 +665,7 @@ class AdminHomeView(AdminRequiredMixin,TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context['pendingorders']=Order.objects.filter(order_status='Order received').order_by('-id')
+        context['unprocessedorders']=Order.objects.filter(order_status='Order received').order_by('-id')
         return context
     
 # cach 1 
@@ -765,8 +764,7 @@ class AdminDeleteOrderView(TemplateView):
     def get(self,request,*args,**kwargs):
         order_id=self.kwargs['pk']
         order_obj=Order.objects.get(id=order_id)
-        if order_obj:
-            order_obj.delete()
+        order_obj.delete()
         return redirect('ecomapp:adminorderlist')
 
 class SearchView(TemplateView):
