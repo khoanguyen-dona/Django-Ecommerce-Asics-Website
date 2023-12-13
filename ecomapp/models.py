@@ -48,7 +48,7 @@ class Product(models.Model):
         return self.title + '___#'+ str(self.id)
 
 class WishList(models.Model):
-    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,blank=True)
+    customer=models.ForeignKey(Customer,on_delete=models.CASCADE,null=True,blank=True)
     count=models.IntegerField(null=True,blank=True)
 
     def __str__(self):      

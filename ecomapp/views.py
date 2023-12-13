@@ -17,13 +17,13 @@ class HomeView(TemplateView):
         context=super().get_context_data(**kwargs)
 
         wishlist_session=self.request.session.get('wishlist_session',None)
-        if wishlist_session:
+        if WishList.objects.filter(id=wishlist_session).exists():
             wishlist=WishList.objects.get(id=wishlist_session)
         else:
             wishlist=None
 
         cart_session=self.request.session.get('cart_session',None)
-        if cart_session:
+        if Cart.objects.filter(id=cart_session).exists():
             cart=Cart.objects.get(id=cart_session)
         else:
             cart=None    
@@ -216,7 +216,7 @@ class AddToWishListView(TemplateView):
         # wishlist_id session
         wishlist_session=self.request.session.get("wishlist_session", None)
         # nếu wishlist_session đã tồn tại thì dùng nó
-        if wishlist_session:
+        if WishList.objects.filter(id=wishlist_session).exists():
             wishlist_obj=WishList.objects.get(id=wishlist_session)
             item_in_wishlist=wishlist_obj.wishlistitem_set.filter(product=product_obj)
             # sản phẩm có trong wishlist thì không tạo mới,bỏ qua
@@ -376,22 +376,6 @@ class CustomerLoginView(FormView):
     template_name='customerLogin.html'
     form_class=CustomerLoginForm
     success_url=reverse_lazy('ecomapp:home')    
-    def get_context_data(self,**kwargs):
-        context=super().get_context_data(**kwargs)
-        wishlist_session=self.request.session.get('wishlist_session',None)
-        if wishlist_session:
-            wishlist=WishList.objects.get(id=wishlist_session)
-        else:
-            wishlist=None
-
-        cart_session=self.request.session.get('cart_session',None)
-        if cart_session:
-            cart=Cart.objects.get(id=cart_session)
-        else:
-            cart=None
-        context['wishlist']=wishlist
-        context['cart']=cart
-        return context   
 
     def form_valid(self,form):
         uname=form.cleaned_data.get('username')
@@ -401,26 +385,42 @@ class CustomerLoginView(FormView):
             login(self.request, usr)
             messages.success(self.request,'Đăng nhập thành công!')
             cart_session=self.request.session.get('cart_session',None)
-            # wishlist_id=self.request.session.get('wishlist_id',None)
-            if cart_session:
+            if Cart.objects.filter(id=cart_session).exists():
                 self.request.session['cart_session']  
                 cart_obj=Cart.objects.get(id=cart_session)
                 cart_obj.customer=self.request.user.customer    
                 cart_obj.save() 
-            # if wishlist_id:
-            #     self.request.session['wishlist_id']
-            #     wishlist_obj=WishList.objects.get(id=wishlist_id)
-            #     wishlist_obj.customer=self.request.user.customer
-            #     wishlist_obj.save()
-            # else :
-                # cart_obj=Cart.objects.get(customer=self.request.user.customer)
-                # cart_obj.save()
-                # wishlist_obj=WishList.objects.get(customer=self.request.user.customer)
-                # wishlist_obj.save()
+                
+            wishlist_session=self.request.session.get('wishlist_session',None)
+              
+            if WishList.objects.filter(id=wishlist_session).exists():
+                self.request.session['wishlist_session']
+                wishlist_obj=WishList.objects.get(id=wishlist_session)
+                wishlist_obj.customer=self.request.user.customer
+                wishlist_obj.save()
+            
         else: 
             return render(self.request,self.template_name,{'form':self.form_class,'error1':'Không hợp lệ'})
         return super().form_valid(form)
    
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+
+        wishlist_session=self.request.session.get('wishlist_session',None)
+        if WishList.objects.filter(id=wishlist_session).exists():
+            wishlist=WishList.objects.get(id=wishlist_session)
+        else:
+            wishlist=None
+
+        cart_session=self.request.session.get('cart_session',None)
+        if Cart.objects.filter(id=cart_session).exists():
+            cart=Cart.objects.get(id=cart_session)
+        else:
+            cart=None
+
+        context['wishlist']=wishlist
+        context['cart']=cart
+        return context   
 class PasswordForgotView(FormView):
     template_name='forgotpassword.html'
     form_class=PasswordForgotForm

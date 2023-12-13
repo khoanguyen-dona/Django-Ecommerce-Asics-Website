@@ -13,13 +13,39 @@
 <!-- header -->
 <header >
     <div class="container  " >
-        <a href="{% url 'ecomapp:home' %}"  class="text-white ">Home </a>|
-        <a href="{% url 'ecomapp:about'  %}" class="text-white ml-2">About us </a>|
-        <a href="{% url 'ecomapp:contact' %}"class="text-white ml-2">Contact us </a>|
-        <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a>|
-        <a href="{% url 'ecomapp:mycart' %}"class="text-white ml-2">  Cart({{cart.count}}) </a>|
-        <a href="{% url 'ecomapp:wishlist' %}"class="text-white ml-2">  Wish list({{wishlist.count}}) </a>|
+        <a href="{% url 'ecomapp:home' %}"  class="text-white ">Home </a>
+        <a href="{% url 'ecomapp:about'  %}" class="text-white ml-2">About us </a>
+        <a href="{% url 'ecomapp:contact' %}"class="text-white ml-2">Contact us </a>
+        <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a>
+        {% if cart.count %}
+        <a href="{% url 'ecomapp:mycart' %}"class="ml-2"> 
+            <span>
+                <img  style="width:35px;" src="{% static 'icon/cart-icon.png' %}" alt=""> 
+                <span class="cart-count" >{{cart.count}}</span> 
+            </span>
+        </a>
+        {% else %}
+        <a href="{% url 'ecomapp:mycart' %}"class="ml-2"> 
+            <span>
+                <img  style="width:35px;" src="{% static 'icon/cart-icon.png' %}" alt=""> 
+            </span>
+        </a>
+        {% endif %}
 
+        {% if wishlist.count %}
+        <a href="{% url 'ecomapp:wishlist' %}"class="ml-4  "> 
+            <span>
+                <img  style="width:30px;"  src="{% static 'icon/white-heart-icon.png' %}" alt="">
+                <span class="wishlist-count " >{{wishlist.count}}</span>
+            </span>
+        </a>
+        {% else %}
+        <a href="{% url 'ecomapp:wishlist' %}"class="ml-4  "> 
+            <span>
+                <img  style="width:30px;"  src="{% static 'icon/white-heart-icon.png' %}" alt="">  
+            </span>
+        </a>
+        {% endif %}
         
         {% if request.user.customer %}
         <a href="{% url 'ecomapp:customerlogout' %}" class="mt-1 btn btn-danger opacity-2 float-right ml-2  " >Log out</a>
@@ -30,7 +56,7 @@
         <a href="{% url 'ecomapp:customerlogin' %}" class="btn btn-outline-light float-right mt-1 shadow" >Log in</a>
         <a href="{% url 'ecomapp:customerRegistration' %}" class="btn btn-outline-light float-right mr-3  mt-1 shadow" >Register</a>
         {% endif %}
-        <div class=" mt-3 ">  
+        <div class=" mt-0 ">  
             <span class="col-md-2 mx-auto " >
                 <form  action="{% url 'ecomapp:search'  %}" method="GET" >
                     <button class="btn btn-sm btn-outline-light mb-1" >Search </button>
