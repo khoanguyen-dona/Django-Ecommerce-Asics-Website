@@ -62,7 +62,12 @@
             <p>(Viewed:{{product.view_count}}times)</p>
             <h5>Category : {{product.category}}</h5>
             <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
-            <a href="{% url 'ecomapp:addtocart'  product.id %}" class="btn btn-outline-primary" >Add to cart</a>
+            <a href="{% url 'ecomapp:addtocart'  product.id %}" style="width:75%;"  class="btn btn-outline-primary" >Add to cart</a>
+
+            <a href="{% url 'ecomapp:addtowishlist'  product.id %}" class=" ml-3 add-to-wishlist ">
+                <img   class="heart-icon-product-detail "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
+            </a>
+
             <hr>
             <p>Warranty:{{product.warranty}} </p>
             <p>Return policy:{{product.return_policy}}</p>

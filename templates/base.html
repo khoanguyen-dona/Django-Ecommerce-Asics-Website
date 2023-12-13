@@ -32,7 +32,8 @@
         </a>
         {% endif %}
 
-        {% if wishlist.count %}
+
+        {% if wishlist.count  %}
         <a href="{% url 'ecomapp:wishlist' %}"class="ml-4  "> 
             <span>
                 <img  style="width:30px;"  src="{% static 'icon/white-heart-icon.png' %}" alt="">
@@ -69,14 +70,16 @@
 {% if messages %}
 		<div class="messages ">
 		{% for message in messages %}
-    
-			<div  id="msg" class="   alert {% if message.tags %}alert-{{ message.tags }} alert-success "{% endif %}>
-				{{ message }}
-			</div>
-        
+            
+            {% if message.tags == 'success' %}
+            <p id="msg"  class="alert alert-success ">{{ message }}</p>
+             {% elif message.tags == 'error' %}
+            <p id="msg"  class="alert alert-danger">{{ message }}</p>
+            {% endif %}
+
 		{% endfor %}
 		</div>   
-	{% endif %}
+{% endif %}
     <!-- content -->
 <body >
     
