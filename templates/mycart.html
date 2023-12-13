@@ -24,12 +24,12 @@ My cart
                 <tbody>
                     {% for cp in cart.cartproduct_set.all %}
                     <tr  >
-                        <td>{{forloop.counter}}</td>
+                        <td >{{forloop.counter}}</td>
                         <td>
-                            <img  class="img-fluid  " width="100px"  src="{{cp.product.image.url}}" alt="">
+                            <img  class="img-fluid  " width="100px"  src="{{cp.product.thumbnail.url}}" alt="">
                         </td>
                         <td>{{cp.product.title}}</td>
-                        <td>{{cp.rate|intcomma}}</td>
+                        <td>{{cp.rate|intcomma}} đ</td>
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal|intcomma}} đ</td>
                         <td>
