@@ -295,8 +295,12 @@ class CheckoutView(CreateView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if WishList.objects.filter(customer=self.request.user.customer).exists():
-            wishlist=WishList.objects.get(customer=self.request.user.customer)
+        if self.request.user.is_authenticated:
+            if WishList.objects.filter(customer=self.request.user.customer).exists():
+                wishlist=WishList.objects.get(customer=self.request.user.customer)
+                context['wishlist']=wishlist
+            else:
+                pass
         else:
             pass
 
@@ -307,7 +311,7 @@ class CheckoutView(CreateView):
             cart=None   
 
         context['cart']=cart
-        context['wishlist']=wishlist
+        
         return context
     def form_valid(self, form):
         cart_session=self.request.session.get('cart_session')
@@ -704,25 +708,27 @@ class AdminOrderListView(AdminRequiredMixin,TemplateView):
             context['allorders']=Order.objects.all().order_by('-id')
             return context
     
-# class AdminOrderStatusChangeView(AdminRequiredMixin, View):
-#     def post(self, request, *args, **kwargs):
-#         ord_id=self.kwargs['pk']
-#         ord_obj=Order.objects.get(id=ord_id)
-#         new_status=request.POST.get('status')
-#         ord_obj.order_status=new_status
-#         ord_obj.save()
-#         return redirect(reverse_lazy('ecomapp:adminorderdetail',kwargs={'pk':ord_id}))
-   
-class AdminOrderStatusChangeView(AdminRequiredMixin,TemplateView):
-    
-    def post(self,request,*args,**kwargs):
-        
+class AdminOrderStatusChangeView(AdminRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        pre_url = request.META.get('HTTP_REFERER')
         ord_id=self.kwargs['pk']
         ord_obj=Order.objects.get(id=ord_id)
         new_status=request.POST.get('status')
         ord_obj.order_status=new_status
         ord_obj.save()
-        return redirect(reverse_lazy('ecomapp:adminorderdetail',kwargs={'pk':ord_id}))
+        return redirect(pre_url)
+   
+# class AdminOrderStatusChangeView(AdminRequiredMixin,TemplateView):
+    
+#     def post(self,request,*args,**kwargs):
+        
+#         order_id=self.kwargs['pk']
+#         order_obj=Order.objects.get(id=order_id)
+#         new_status=request.POST.get('status')
+#         order_obj.order_status=new_status
+#         order_obj.save()
+#         messages.success(request,'Cập nhật thành công')
+#         return redirect(reverse_lazy('ecomapp:adminorderdetail',kwargs={'pk':order_id}))
     
 class AdminOrderReceivedView(AdminRequiredMixin,TemplateView):
     template_name='adminpages/adminorderreceived.html'
