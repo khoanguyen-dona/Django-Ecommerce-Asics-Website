@@ -295,8 +295,12 @@ class CheckoutView(CreateView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if WishList.objects.filter(customer=self.request.user.customer).exists():
-            wishlist=WishList.objects.get(customer=self.request.user.customer)
+        if self.request.user.is_authenticated:
+            if WishList.objects.filter(customer=self.request.user.customer).exists():
+                wishlist=WishList.objects.get(customer=self.request.user.customer)
+                context['wishlist']=wishlist
+            else:
+                pass
         else:
             pass
 
@@ -307,7 +311,7 @@ class CheckoutView(CreateView):
             cart=None   
 
         context['cart']=cart
-        context['wishlist']=wishlist
+        
         return context
     def form_valid(self, form):
         cart_session=self.request.session.get('cart_session')
@@ -356,8 +360,12 @@ class CustomerRegistrationView(CreateView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if WishList.objects.filter(customer=self.request.user.customer).exists():
-            wishlist=WishList.objects.get(customer=self.request.user.customer)
+        if self.request.user.is_authenticated:
+            if WishList.objects.filter(customer=self.request.user.customer).exists():
+                wishlist=WishList.objects.get(customer=self.request.user.customer)
+                context['wishlist']=wishlist
+            else:
+                pass
         else:
             pass
 
@@ -366,7 +374,7 @@ class CustomerRegistrationView(CreateView):
             cart=Cart.objects.get(id=cart_session)
         else:
             cart=None
-        context['wishlist']=wishlist
+        
         context['cart']=cart
         return context 
 
@@ -437,8 +445,12 @@ class PasswordForgotView(FormView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if WishList.objects.filter(customer=self.request.user.customer).exists():
-            wishlist=WishList.objects.get(customer=self.request.user.customer)
+        if self.request.user.is_authenticated:
+            if WishList.objects.filter(customer=self.request.user.customer).exists():
+                wishlist=WishList.objects.get(customer=self.request.user.customer)
+                context['wishlist']=wishlist
+            else:
+                pass
         else:
             pass
 
@@ -447,7 +459,7 @@ class PasswordForgotView(FormView):
             cart=Cart.objects.get(id=cart_session)
         else:
             cart=None
-        context['wishlist']=wishlist
+        
         context['cart']=cart
         return context 
     
@@ -480,8 +492,12 @@ class PasswordResetView(FormView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if WishList.objects.filter(customer=self.request.user.customer).exists():
-            wishlist=WishList.objects.get(customer=self.request.user.customer)
+        if self.request.user.is_authenticated:
+            if WishList.objects.filter(customer=self.request.user.customer).exists():
+                wishlist=WishList.objects.get(customer=self.request.user.customer)
+                context['wishlist']=wishlist
+            else:
+                pass
         else:
             pass
 
@@ -490,7 +506,7 @@ class PasswordResetView(FormView):
             cart=Cart.objects.get(id=cart_session)
         else:
             cart=None
-        context['wishlist']=wishlist
+        
         context['cart']=cart
         return context 
 
