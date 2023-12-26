@@ -62,16 +62,80 @@
             <p>(Viewed:{{product.view_count}}times)</p>
             <h5>Category : {{product.category}}</h5>
             <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
-            <a href="{% url 'ecomapp:addtocart'  product.id %}" style="width:75%;"  class="btn btn-outline-primary" >Add to cart</a>
+            <a href="{% url 'ecomapp:addtocart'  product.id  %}" id="link"     style="width:75%;"    class="btn btn-outline-primary" >Add to cart</a>
 
             <a href="{% url 'ecomapp:addtowishlist'  product.id %}" class=" ml-3 add-to-wishlist ">
                 <img   class="heart-icon-product-detail "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
             </a>
+            <hr>
+            {% if product.productsize.size_6 == True %}
+            <div class="product-size-number-true product-size product-active" value="6">6</div>
+            {% else %} 
+            <div class="product-size-number-false  " >6</div>
+            {%  endif %} 
 
-            <hr>
-            <p>Warranty:{{product.warranty}} </p>
-            <p>Return policy:{{product.return_policy}}</p>
-            <hr>
+            {% if product.productsize.size_6h == True %}
+            <div class="product-size-number-true product-size" value="6h">6h</div>
+            {% else %} 
+            <div class="product-size-number-false " >6h</div>
+            {%  endif %} 
+
+            {% if product.productsize.size_7 == True %}
+            <span class="product-size-number-true product-size" value="7">7</span>
+            {% else %} 
+            <span class="product-size-number-false " >7</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_7h == True %}
+            <span class="product-size-number-true product-size" value="7h">7h</span>
+            {% else %} 
+            <span class="product-size-number-false " >7h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_8 == True %}
+            <span class="product-size-number-true product-size" value="8">8</span>
+            {% else %} 
+            <span class="product-size-number-false " >8</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_8h == True %}
+            <span class="product-size-number-true product-size" value="8h">8h</span>
+            {% else %} 
+            <span class="product-size-number-false " >8h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_9 == True %}
+            <span class="product-size-number-true product-size" value="9">9</span>
+            {% else %} 
+            <span class="product-size-number-false " >9</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_9h == True %}
+            <span class="product-size-number-true product-size" value="9h">9h</span>
+            {% else %} 
+            <span class="product-size-number-false " >9h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_10 == True %}
+            <span class="product-size-number-true product-size" value="10">10</span>
+            {% else %} 
+            <span class="product-size-number-false " >10</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_10h == True %}
+            <span class="product-size-number-true product-size" value="10h">10h</span>
+            {% else %} 
+            <span class="product-size-number-false " >10h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_11 == True %}
+            <span class="product-size-number-true product-size" value="11">11</span>
+            {% else %} 
+            <span class="product-size-number-false ">11</span>
+            {%  endif %} 
+
+
+            
             <p>{{product.description}}</p>
         </div>
     </div>
@@ -102,7 +166,44 @@
             document.getElementById('thumbnail').src=this.src
         })
     }
+
+
+</script>
+
+<script type="text/javascript" >
     
+    let productSize=document.getElementsByClassName('product-size')
+    let productChosen=document.getElementsByClassName('product-active')
+    let link =document.getElementById('link')
+    for(var i=0;i<productSize.length; i++){
+        productSize[i].addEventListener('click',function(e){
+            if(productChosen.length>0){
+                productChosen[0].classList.remove('product-active')
+            }
+            this.classList.add('product-active')
+            const size=e.target.innerHTML
+            console.log('số size là :',size)
+            link.href=link.href+"?s="+size
+        })
+    }
+
+    
+   
+
 </script>
 
 {% endblock content %} 
+<!-- 
+let productSize=document.getElementsByClassName('product-size')
+    let productChosen=document.getElementsByClassName('product-active')
+    for(var i=0;i<productSize.length; i++){
+        productSize[i].addEventListener('click',function(e){
+            if(productChosen.length>0){
+                productChosen[0].classList.remove('product-active')
+            }
+            this.classList.add('product-active')
+            const size=e.target.innerHTML
+            console.log('số size là :',size)
+              
+        })
+    } -->

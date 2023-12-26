@@ -101,6 +101,10 @@ class AddToCartView(TemplateView):
     def get(self,request,*args,**kwargs):
         pre_url = request.META.get('HTTP_REFERER')
         product_id=self.kwargs['pro_id']
+        product_size=self.request.GET['s']
+        print('product id là :',product_id)
+        print('product size là :',product_size)
+
         # product in database
         product_obj=Product.objects.get(id=product_id)
         # cart id session

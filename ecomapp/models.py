@@ -40,12 +40,28 @@ class Product(models.Model):
     marked_price=models.BigIntegerField()
     selling_price=models.BigIntegerField()
     description=models.TextField()  
-    warranty=models.CharField(max_length=300,null=True,blank=True)
-    return_policy=models.CharField(max_length=300,null=True,blank=True)
     view_count=models.BigIntegerField(default=0)
+    
 
     def __str__(self):
         return self.title + '___#'+ str(self.id)
+    
+class ProductSize(models.Model):
+    product=models.OneToOneField(Product,on_delete=models.CASCADE)
+    size_6=models.BooleanField(default=True,blank=False)
+    size_6h=models.BooleanField(default=True,blank=False)
+    size_7=models.BooleanField(default=True,blank=False)
+    size_7h=models.BooleanField(default=True,blank=False)
+    size_8=models.BooleanField(default=True,blank=False)
+    size_8h=models.BooleanField(default=True,blank=False)
+    size_9=models.BooleanField(default=True,blank=False)
+    size_9h=models.BooleanField(default=True,blank=False)
+    size_10=models.BooleanField(default=True,blank=False)
+    size_10h=models.BooleanField(default=True,blank=False)
+    size_11=models.BooleanField(default=True,blank=False)
+
+    def __str__(self):
+        return self.product.title
 
 class WishList(models.Model):
     customer=models.OneToOneField(Customer,on_delete=models.CASCADE,null=True,blank=True)
@@ -83,6 +99,8 @@ class CartProduct(models.Model):
     rate=models.BigIntegerField()
     quantity=models.BigIntegerField()
     subtotal=models.BigIntegerField()
+    size=models.IntegerField(null=True,blank=True)
+
 
     def __str__(self):
         return 'Cart: '+str(self.cart.id) + 'CartProduct: '+str(self.id)
