@@ -62,14 +62,17 @@
             <p>(Viewed:{{product.view_count}}times)</p>
             <h5>Category : {{product.category}}</h5>
             <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
-            <a href="{% url 'ecomapp:addtocart'  product.id  %}" id="link"     style="width:75%;"    class="btn btn-outline-primary" >Add to cart</a>
+            <a href="{% url 'ecomapp:addtocart'  product.id  %}?s=" id="addtocart"     style="width:75%;"    class="btn btn-outline-primary" >Add to cart</a>
 
             <a href="{% url 'ecomapp:addtowishlist'  product.id %}" class=" ml-3 add-to-wishlist ">
                 <img   class="heart-icon-product-detail "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
             </a>
             <hr>
+
+            <p id="size-chosen">Kích thước (US) :</p>
+
             {% if product.productsize.size_6 == True %}
-            <div class="product-size-number-true product-size product-active" value="6">6</div>
+            <div class="product-size-number-true product-size " value="6">6</div>
             {% else %} 
             <div class="product-size-number-false  " >6</div>
             {%  endif %} 
@@ -173,17 +176,33 @@
 <script type="text/javascript" >
     
     let productSize=document.getElementsByClassName('product-size')
+    console.log('productsize.length là :',productSize.length)
     let productChosen=document.getElementsByClassName('product-active')
-    let link =document.getElementById('link')
+    let link =document.getElementById('addtocart') 
+    
     for(var i=0;i<productSize.length; i++){
+        
         productSize[i].addEventListener('click',function(e){
             if(productChosen.length>0){
                 productChosen[0].classList.remove('product-active')
             }
             this.classList.add('product-active')
-            const size=e.target.innerHTML
+            
+            link.href=link.href.substring(0,39)   
+            var size=''
+            size=e.target.innerHTML
+         
             console.log('số size là :',size)
-            link.href=link.href+"?s="+size
+            link.href=link.href.concat(size)
+            console.log("Link href la :",link.href)
+
+            var sizeChosen=document.getElementById('size-chosen').innerHTML
+            sizeChosen=sizeChosen.substring(0,17)
+            sizeChosen+=" "+size
+            document.getElementById('size-chosen').innerHTML=sizeChosen
+            console.log(sizeChosen)
+            
+            
         })
     }
 
@@ -191,6 +210,7 @@
    
 
 </script>
+
 
 {% endblock content %} 
 <!-- 

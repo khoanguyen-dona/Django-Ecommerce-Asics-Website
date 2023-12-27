@@ -102,39 +102,46 @@ class AddToCartView(TemplateView):
         pre_url = request.META.get('HTTP_REFERER')
         product_id=self.kwargs['pro_id']
         product_size=self.request.GET['s']
-        print('product id là :',product_id)
-        print('product size là :',product_size)
-
         # product in database
         product_obj=Product.objects.get(id=product_id)
         # cart id session
         cart_session=self.request.session.get("cart_session", None)
-        # if cart already exist 
+        # nếu cart đã tồn tại 
         if cart_session:
             cart_obj=Cart.objects.get(id=cart_session)
-            item_in_cart=cart_obj.cartproduct_set.filter(product=product_obj)
+            item_in_cart=cart_obj.cartproduct_set.filter(product=product_obj,size=product_size)
             # sản phẩm có trong cart thì không tạo mới,thực hiện logic + thêm
             if item_in_cart.exists():
-                cartproduct=item_in_cart.last()
-                cartproduct.quantity+=1
-                cartproduct.subtotal+=product_obj.selling_price
-                cartproduct.save()
-                cart_obj.total+=product_obj.selling_price
-                cart_obj.count+=1
-                cart_obj.save()
+                # nếu chung product và cùng 1 size
+                if product_size == item_in_cart.first().size:
+                    cartproduct=item_in_cart.first()
+                    cartproduct.quantity+=1
+                    cartproduct.subtotal+=product_obj.selling_price
+                    cartproduct.save()
+                    cart_obj.total+=product_obj.selling_price
+                    cart_obj.count+=1
+                    cart_obj.save()
+                # nếu chung product nhưng khác size    
+                else:
+                    cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
+                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size)
+                    cart_obj.total+=product_obj.selling_price
+                    cart_obj.count+=1
+                    cart_obj.save()
+
             # sản phẩm chưa từng xuất hiện trong cart ta tạo mới
             else:
                 cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
-                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price)
+                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size)
                 cart_obj.total+=product_obj.selling_price
                 cart_obj.count+=1
                 cart_obj.save()
-        # create new cart if deos no  exits
+        # tạo cart nếu chưa có cart
         else:
             cart_obj=Cart.objects.create(total=0,count=1)
             self.request.session['cart_session']=cart_obj.id
             cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,rate=product_obj.selling_price,
-                                                   quantity=1,subtotal=product_obj.selling_price)
+                                                   quantity=1,subtotal=product_obj.selling_price,size=product_size)
             cart_obj.total+=product_obj.selling_price
             if self.request.user.is_authenticated:
                 cart_obj.customer=self.request.user.customer

@@ -99,7 +99,7 @@ class CartProduct(models.Model):
     rate=models.BigIntegerField()
     quantity=models.BigIntegerField()
     subtotal=models.BigIntegerField()
-    size=models.IntegerField(null=True,blank=True)
+    size=models.CharField(null=True,blank=True,max_length=10    )
 
 
     def __str__(self):

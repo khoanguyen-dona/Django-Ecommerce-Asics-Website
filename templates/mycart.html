@@ -15,6 +15,7 @@ My cart
                         <th>#</th>
                         <th>Image</th>
                         <th>Product</th>
+                        <th>Size</th>
                         <th>Rate</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -29,6 +30,7 @@ My cart
                             <img  class="img-fluid  " width="100px"  src="{{cp.product.thumbnail.url}}" alt="">
                         </td>
                         <td>{{cp.product.title}}</td>
+                        <td>{{cp.size}} (US)</td>
                         <td>{{cp.rate|intcomma}} đ</td>
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal|intcomma}} đ</td>
