@@ -55,13 +55,19 @@
         <div class="col-md-4 productdetail-desc  card-border py-2" >
             <h4>{{product.title}}  </h4>
             <p>(Viewed:{{product.view_count}}times)</p>
-            <h5>Category : {{product.category}}</h5>
+            <!-- <h5>Category : {{product.category}}</h5> -->
             <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
             <a href="{% url 'ecomapp:addtocart'  product.id  %}?s=" id="addtocart"     style="width:75%;"    class="btn btn-outline-primary" >Add to cart</a>
 
+            {% if product in product_in_wishlist %}
+            <a  class=" ml-3 add-to-wishlist ">
+                <img   class="heart-icon-product-detail "  src="{% static 'icon/red-heart-icon.png' %}" alt="">
+            </a>
+            {% else %}
             <a href="{% url 'ecomapp:addtowishlist'  product.id %}" class=" ml-3 add-to-wishlist ">
                 <img   class="heart-icon-product-detail "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
             </a>
+            {% endif %}
             <hr>
 
             <p id="size-chosen">Kích thước (US) :</p>
@@ -150,7 +156,7 @@
 </div>
 
 
-
+<!-- hover hình -->
 <script  type="text/javascript">
     let images=document.getElementsByClassName('images')
     let activeImages=document.getElementsByClassName('active')
@@ -167,28 +173,38 @@
 
 
 </script>
-
+<!-- chọn size,thay đổi link.href để gửi qua backend -->
 <script type="text/javascript" >
     
     let productSize=document.getElementsByClassName('product-size')
-    console.log('productsize.length là :',productSize.length)
+    
     let productChosen=document.getElementsByClassName('product-active')
     let link =document.getElementById('addtocart') 
-    
+    console.log(link.href)
+    // size.length=undefined
+    var size=5
     for(var i=0;i<productSize.length; i++){
-        
         productSize[i].addEventListener('click',function(e){
             if(productChosen.length>0){
                 productChosen[0].classList.remove('product-active')
             }
-            this.classList.add('product-active')
-            
-            // link.href thay đổi theo click
-            link.href=link.href.substring(0,39)   
-            var size=''
-            size=e.target.innerHTML 
-            link.href=link.href.concat(size)
+            this.classList.add('product-active') 
 
+            // link.href thay đổi theo click
+            if (size.length==1){
+                link.href=link.href.substring(0,link.href.length-1)
+            }
+            if(size.length==2){
+                link.href=link.href.substring(0,link.href.length-2)
+            }
+            if(size.length==3){
+                link.href=link.href.substring(0,link.href.length-3)
+            }
+            
+            size=e.target.innerHTML 
+            console.log('size length là:',size.length)
+            link.href=link.href.concat(size)
+            console.log('link href là :',link.href)
             // hiển thị size khi click vào ở id size-chosen    
             var sizeChosen=document.getElementById('size-chosen').innerHTML
             sizeChosen="Kích thước (US) :"
@@ -197,26 +213,10 @@
             console.log(sizeChosen)
             
         })
-    }
-
-    
-   
+    } 
 
 </script>
 
 
 {% endblock content %} 
-<!-- 
-let productSize=document.getElementsByClassName('product-size')
-    let productChosen=document.getElementsByClassName('product-active')
-    for(var i=0;i<productSize.length; i++){
-        productSize[i].addEventListener('click',function(e){
-            if(productChosen.length>0){
-                productChosen[0].classList.remove('product-active')
-            }
-            this.classList.add('product-active')
-            const size=e.target.innerHTML
-            console.log('số size là :',size)
-              
-        })
-    } -->
+

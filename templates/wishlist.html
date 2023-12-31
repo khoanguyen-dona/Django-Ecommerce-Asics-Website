@@ -20,17 +20,14 @@
       <a href="{%  url 'ecomapp:productdetail' p.product.slug %}">
         <img  class="img-fluid  " src="{{p.product.thumbnail.url}}" alt=""  />
       </a>
-      <strong><p>
-          Price:
+      <strong>
+        <p>Price:
           <small><strike>{{p.product.marked_price|intcomma}}</strike></small>
           {{p.product.selling_price|intcomma}} đ
-        </p></strong>
+        </p>
+      </strong>
       <div>
-        <!-- <a href="{% url 'ecomapp:addtocart'  p.product.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a> -->
-        <a href="{% url 'ecomapp:removefromwishlist'  p.id %}" class=" mb-3 btn btn-outline-secondary btn-block">X
-          
-        </a>
-
+        <a href="{% url 'ecomapp:removefromwishlist'  p.id %}" class=" mb-3 btn btn-outline-secondary btn-block">X</a>
       </div>  
 
     </div>

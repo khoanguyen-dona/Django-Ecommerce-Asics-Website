@@ -22,6 +22,7 @@ class HomeView(TemplateView):
                 product_in_wishlist = []
                 for i in wishlist.wishlistitem_set.all():
                     product_in_wishlist.append(i.product)
+                
                 context['wishlist']=wishlist   
                 context['product_in_wishlist']=product_in_wishlist
             else:
@@ -75,6 +76,11 @@ class ProductDetailView(TemplateView):
         if self.request.user.is_authenticated:
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
+                product_in_wishlist = []
+                for i in wishlist.wishlistitem_set.all():
+                    product_in_wishlist.append(i.product)
+      
+                context['product_in_wishlist']=product_in_wishlist
                 context['wishlist']=wishlist
             else:
                 pass
