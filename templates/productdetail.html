@@ -5,7 +5,6 @@
 
 {% block content %}
 <style>
-
 .images{
     /* object-fit:cover; */
     /* max-width:200px;
@@ -21,10 +20,6 @@
 .active{
     opacity:1;
 }
-
-
-
-
 
 </style>
 
@@ -188,20 +183,18 @@
             }
             this.classList.add('product-active')
             
+            // link.href thay đổi theo click
             link.href=link.href.substring(0,39)   
             var size=''
-            size=e.target.innerHTML
-         
-            console.log('số size là :',size)
+            size=e.target.innerHTML 
             link.href=link.href.concat(size)
-            console.log("Link href la :",link.href)
 
+            // hiển thị size khi click vào ở id size-chosen    
             var sizeChosen=document.getElementById('size-chosen').innerHTML
-            sizeChosen=sizeChosen.substring(0,17)
+            sizeChosen="Kích thước (US) :"
             sizeChosen+=" "+size
             document.getElementById('size-chosen').innerHTML=sizeChosen
             console.log(sizeChosen)
-            
             
         })
     }

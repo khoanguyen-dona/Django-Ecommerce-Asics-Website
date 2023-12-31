@@ -32,7 +32,7 @@ urlpatterns=[
     path('admin-home/',AdminHomeView.as_view(),name='adminhome'),
     path('admin-order-<int:pk>/',AdminOrderDetailView.as_view(),name='adminorderdetail'),
     path('admin-logout/',AdminLogoutView.as_view(),name='adminlogout'),
-    path('admin-all-orders/',AdminOrderListView.as_view(),name='adminorderlist'),
+    path('admin-order-list/',AdminOrderListView.as_view(),name='adminorderlist'),
     path('admin-order-<int:pk>-change/',AdminOrderStatusChangeView.as_view(),name='adminorderstatuschange'),
 
     path('admin-order-received/',AdminOrderReceivedView.as_view(),name='adminorderreceived'),
@@ -44,5 +44,6 @@ urlpatterns=[
     path('admin-delete-order<int:pk>/',AdminDeleteOrderView.as_view(),name='admindeleteorder'),
     path('admin-product/list/',AdminProductListView.as_view(),name='adminproductlist'),
     path('admin-product/add/',AdminProductCreateView.as_view(),name='adminproductcreate'),
+    path('admin-product/delete/<int:pk>',AdminProductDeleteView.as_view(),name='adminproductdelete'),
 
 ]

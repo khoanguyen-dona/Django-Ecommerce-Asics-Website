@@ -26,8 +26,8 @@
           {{p.product.selling_price|intcomma}} đ
         </p></strong>
       <div>
-        <a href="{% url 'ecomapp:addtocart'  p.product.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a>
-        <a href="{% url 'ecomapp:removefromwishlist'  p.id %}" class="ml-3 mb-3 btn btn-outline-secondary ">X
+        <!-- <a href="{% url 'ecomapp:addtocart'  p.product.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a> -->
+        <a href="{% url 'ecomapp:removefromwishlist'  p.id %}" class=" mb-3 btn btn-outline-secondary btn-block">X
           
         </a>
 

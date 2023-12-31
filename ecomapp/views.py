@@ -19,7 +19,11 @@ class HomeView(TemplateView):
         if self.request.user.is_authenticated:
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
+                mywishlist = []
+                for i in wishlist.wishlistitem_set.all:
+                    mywishlist.append(i.product)
                 context['wishlist']=wishlist
+                context['mywishlist']=mywishlist
             else:
                 pass
         else:
@@ -84,6 +88,9 @@ class ProductDetailView(TemplateView):
             cart=None  
 
         url_slug=self.kwargs['slug']
+        product = Product.objects.get(slug=url_slug)
+        product.view_count+=1
+        product.save()
         context['product']=Product.objects.get(slug=url_slug)
         context['cart']=cart
         
@@ -706,17 +713,6 @@ class AdminOrderDetailView(AdminRequiredMixin,TemplateView):
         context['order_obj']=order_obj
         context['allstatus']=ORDER_STATUS
         return context
-# cach 2
-# class AdminOrderDetailView(AdminRequiredMixin,DetailView):
-#     template_name='adminpages/adminorderdetail.html'
-#     model=Order
-#     context_object_name='order_obj'
-
-#     def get_context_data(self, **kwargs):
-#         context=super().get_context_data(**kwargs)
-#         context['allstatus']=ORDER_STATUS
-#         return context
-
 
 class AdminLogoutView(TemplateView):
     def get(self,request):
@@ -731,22 +727,13 @@ class AdminOrderListView(AdminRequiredMixin,TemplateView):
             context['allorders']=Order.objects.all().order_by('-id')
             return context
     
-# class AdminOrderStatusChangeView(AdminRequiredMixin, View):
-#     def post(self, request, *args, **kwargs):
-#         ord_id=self.kwargs['pk']
-#         ord_obj=Order.objects.get(id=ord_id)
-#         new_status=request.POST.get('status')
-#         ord_obj.order_status=new_status
-#         ord_obj.save()
-#         return redirect(reverse_lazy('ecomapp:adminorderdetail',kwargs={'pk':ord_id}))
-   
 class AdminOrderStatusChangeView(AdminRequiredMixin,TemplateView):
     
     def post(self,request,*args,**kwargs):
         
         ord_id=self.kwargs['pk']
         ord_obj=Order.objects.get(id=ord_id)
-        new_status=request.POST.get('status')
+        new_status=request.POST['status']
         ord_obj.order_status=new_status
         ord_obj.save()
         return redirect(reverse_lazy('ecomapp:adminorderdetail',kwargs={'pk':ord_id}))
@@ -817,11 +804,77 @@ class AdminProductListView(AdminRequiredMixin, TemplateView):
 class AdminProductCreateView(AdminRequiredMixin,CreateView):
     template_name='adminpages/adminproductcreate.html'
     form_class=ProductForm
+    
     success_url=reverse_lazy('ecomapp:adminproductlist')
+
 
     def form_valid(self,form):
         p=form.save()
         images=self.request.FILES.getlist('images')
         for i in images:
             ProductImage.objects.create(product=p,image=i)
+
+        if self.request.POST.get('size_6') == 'checked':
+            size_6=True
+        else:
+            size_6=False
+        if self.request.POST.get('size_6h') == 'checked':
+            size_6h=True
+        else:
+            size_6h=False
+
+        if self.request.POST.get('size_7') == 'checked':
+            size_7=True
+        else:
+            size_7=False
+        if self.request.POST.get('size_7h') == 'checked':
+            size_7h=True
+        else:
+            size_7h=False
+
+        if self.request.POST.get('size_8') == 'checked':
+            size_8=True
+        else:
+            size_8=False
+        if self.request.POST.get('size_8h') == 'checked':
+            size_8h=True
+        else:
+            size_8h=False
+
+        if self.request.POST.get('size_9') == 'checked':
+            size_9=True
+        else:
+            size_9=False
+        if self.request.POST.get('size_9h') == 'checked':
+            size_9h=True
+        else:
+            size_9h=False
+
+
+        if self.request.POST.get('size_10') == 'checked':
+            size_10=True
+        else:
+            size_10=False
+        if self.request.POST.get('size_10h') == 'checked':
+            size_10h=True
+        else:
+            size_10h=False
+
+        if self.request.POST.get('size_11') == 'checked':
+            size_11=True
+        else:
+            size_11=False
+
+        ps=ProductSize.objects.create(product=p,size_6=size_6,size_6h=size_6h,size_7=size_7,size_7h=size_7h,size_8=size_8,size_8h=size_8h
+                                      ,size_9=size_9,size_9h=size_9h,size_10=size_10,size_10h=size_10h,size_11=size_11)
+        ps.save()
+
+
         return super().form_valid(form)
+    
+class AdminProductDeleteView(AdminRequiredMixin,CreateView):
+    def get(self,request,*args,**kwargs):
+        product_id=self.kwargs['pk']
+        product_obj=Product.objects.get(id=product_id)
+        product_obj.delete()
+        return redirect('ecomapp:adminproductlist')

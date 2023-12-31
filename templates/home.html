@@ -16,23 +16,22 @@
       <a href="{%  url 'ecomapp:productdetail' p.slug %}">
         <img  class="img-fluid  " src="{{p.thumbnail.url}}" alt=""  />
       </a>
-      <strong><p>
-          Price:
-          <small><strike>{{p.marked_price|intcomma}}</strike></small>
-          {{p.selling_price|intcomma}} đ
-        </p></strong>
-      <div>
-        <a href="{% url 'ecomapp:addtocart'  p.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a>
-        {%  if p in wishlist.wishlistitem_set.all %}
-        <a href="{% url 'ecomapp:addtowishlist'  p.id %}" class="ml-3 add-to-wishlist ">
-          <img class="heart-icon-navbar "  src="{% static 'icon/red-heart-icon.png' %}" alt="">
-        </a>
-        {% else %}
-        <a href="{% url 'ecomapp:addtowishlist'  p.id %}" class="ml-3 add-to-wishlist ">
-          <img class="heart-icon-navbar "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
-        </a>
-        {%  endif %}
-      </div>  
+      <div class="home-product-price" >
+        <strong><span class="inline-block product-price"> Price:<small><strike>{{p.marked_price|intcomma}}</strike></small>
+            {{p.selling_price|intcomma}} đ
+          </span></strong>
+        
+          
+          {%  if p in mywishlist %}
+          <a  class=" inline-block add-to-wishlist " >
+            <img class="heart-icon-navbar "  src="{% static 'icon/red-heart-icon.png' %}" alt="add to wishlist">
+          </a>
+          {% else %}
+          <a href="{% url 'ecomapp:addtowishlist'  p.id %}" class="inline-block add-to-wishlist ">
+            <img class="heart-icon-navbar "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
+          </a>
+          {%  endif %}
+      </div>
 
     </div>
     {% endfor %}

@@ -23,7 +23,11 @@
         <div class="col-md-8 mx-auto" >
             <h3>Order Detail</h3><hr>
             <p> <span class="font-weight-bold">Order ID :</span> #ORDER_{{order_obj.id}}</p>
-            <p> <span class="font-weight-bold">Order Status :</span> {{order_obj.order_status}}</p>
+            {% if order_obj.order_status == 'Order canceled' %}
+            <p> <span class="font-weight-bold ">Order Status :</span> <span class="text-danger font-weight-bold" > {{order_obj.order_status}} </span> </p>
+            {% else %}
+            <p> <span class="font-weight-bold ">Order Status :</span> <span class="text-success font-weight-bold " > {{order_obj.order_status}} </span> </p>
+            {% endif %}
             <p> <span class="font-weight-bold">Order on :</span> {{order_obj.created_at}}({{order_obj.created_at|timesince}} ago)</p>
             <p> <span class="font-weight-bold">Customer name: </span> {{order_obj.ordered_by}}</p>
             <p> <span class="font-weight-bold">Customer mobile :</span>  {{order_obj.mobile}}</p>
@@ -36,6 +40,8 @@
                     <tr>
                         <th>#</th>
                         <th>Item</th>
+                        <th>Image</th>
+                        <th>Size</th>
                         <th>Rate</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -46,25 +52,39 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td> <a href="{% url 'ecomapp:productdetail' cp.product.slug %}" > {{cp.product.title}}   </a> </td>
-                        <td>{{cp.rate|intcomma}}</td>
+                        <td><img class="img-fluid" style="width:100px;" src="{{cp.product.thumbnail.url}}" alt=""></td>
+                        <td>{{cp.size}} (US)</td>
+                        <td>{{cp.rate|intcomma}} đ</td>
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal|intcomma}} đ </td>
                     {% endfor %}    
                     </tr>
+                    <tr>
+                        <th colspan="6" class=" text-right" >Total:</th>
+                        <th >{{order_obj.total|intcomma}} đ</th>
+                    </tr>
                 </tbody>
             </table>
-            <form action="{% url 'ecomapp:adminorderstatuschange' order_obj.id %}"  method="POST">
+            <form  id="form" action="{% url 'ecomapp:adminorderstatuschange' order_obj.id %}"  method="POST">
                 {% csrf_token %}
-                <select name="status" id="" class="btn btn-secondary"    >
+                <select id="status"  name="status"  class="btn btn-secondary" >
                     {% for i,j in allstatus %}  
                     <option value="{{i}}" {% if i == order_obj.order_status %}selected{% endif %} >{{j}}</option>              
                     {% endfor %}
                 </select>
-                <button class="btn  btn-primary" type="submit">Update</button>
+                <button id="submit" class="btn  btn-primary" type="submit">Update</button>
             </form>
         </div>
 
     </div>
 
 </div>
+
+<script>
+    let status= document.getElementById('status').addEventListener('onchange',function(){
+        document.getElementById('form').submit()
+    })
+</script>
+
 {% endblock content %}
+

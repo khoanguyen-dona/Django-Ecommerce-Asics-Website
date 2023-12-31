@@ -39,7 +39,7 @@ class Product(models.Model):
     thumbnail=models.ImageField(upload_to='products/thumbnails')
     marked_price=models.BigIntegerField()
     selling_price=models.BigIntegerField()
-    description=models.TextField()  
+    description=models.TextField(blank=True)  
     view_count=models.BigIntegerField(default=0)
     
 
@@ -48,18 +48,18 @@ class Product(models.Model):
     
 class ProductSize(models.Model):
     product=models.OneToOneField(Product,on_delete=models.CASCADE)
-    size_6=models.BooleanField(default=True,blank=False)
-    size_6h=models.BooleanField(default=True,blank=False)
-    size_7=models.BooleanField(default=True,blank=False)
-    size_7h=models.BooleanField(default=True,blank=False)
-    size_8=models.BooleanField(default=True,blank=False)
-    size_8h=models.BooleanField(default=True,blank=False)
-    size_9=models.BooleanField(default=True,blank=False)
-    size_9h=models.BooleanField(default=True,blank=False)
-    size_10=models.BooleanField(default=True,blank=False)
-    size_10h=models.BooleanField(default=True,blank=False)
-    size_11=models.BooleanField(default=True,blank=False)
-
+    size_6=models.BooleanField(blank=True)
+    size_6h=models.BooleanField(blank=True)
+    size_7=models.BooleanField(blank=True)
+    size_7h=models.BooleanField(blank=True)
+    size_8=models.BooleanField(blank=True)
+    size_8h=models.BooleanField(blank=True)
+    size_9=models.BooleanField(blank=True)
+    size_9h=models.BooleanField(blank=True)
+    size_10=models.BooleanField(blank=True)
+    size_10h=models.BooleanField(blank=True)
+    size_11=models.BooleanField(blank=True)   
+    
     def __str__(self):
         return self.product.title
 

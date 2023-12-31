@@ -9,10 +9,25 @@
             <form action="" method="POST" enctype="multipart/form-data" >
                 {% csrf_token %}
                 {{form.as_p}}
-                <input type="file" name="images" multiple placeholder="more images pls">
-                <button class="btn btn-success btn-block mt-3 " type="submit"  >  Add </button>
+                <input type="file" name="images" multiple placeholder="more images pls"><br>
+
+                <input type="checkbox" name="size_6"   checked value="checked" >Size 6 |
+                <input type="checkbox" name="size_6h"  checked value="checked">Size 6h | 
+                <input type="checkbox" name="size_7"   checked value="checked">Size 7 |
+                <input type="checkbox" name="size_7h"  checked value="checked">Size 7h | 
+                <input type="checkbox" name="size_8"   checked value="checked">Size 8 | 
+                <input type="checkbox" name="size_8h"  checked value="checked">Size 8h | 
+                <input type="checkbox" name="size_9"   checked value="checked">Size 9 | 
+                <input type="checkbox" name="size_9h"  checked value="checked">Size 9h | 
+                <input type="checkbox" name="size_10"  checked value="checked">Size 10  |
+                <input type="checkbox" name="size_10h" checked value="checked">Size 10h | 
+                <input type="checkbox" name="size_11"  checked value="checked">Size 11  |
+
                 
+                  
+                <button class="btn btn-success btn-block mt-3 " type="submit"  >  Add </button>
             </form>
+            
         </div>
     </div>
 

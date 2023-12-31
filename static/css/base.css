@@ -129,7 +129,15 @@ header{
 }
 .add-to-wishlist{
     width:20%;
+    margin-left:15px;
+    
 }
+
+.inline-block{
+    position:inline;
+    
+}
+
 .heart-icon-navbar{
     color:red;
     width:30px;
@@ -202,4 +210,11 @@ header{
     border-color:rgb(28, 28, 255);
     background-color:rgb(28, 28, 255);
     color:white;
+}
+.product-size:hover{
+    border-color:blue;
+    box-shadow:0px 0px 8px #2511dc ;
+    z-index:0;
+    /* background-color:rgb(112, 112, 255); */
+    /* color:white; */
 }

@@ -15,6 +15,7 @@
                         <th>Image</th>
                         <th>Price</th>
                         <th>Views</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,9 +23,10 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{p.title}}</td>
-                        <td>  <img src="{{p.image.url}}" style="height:50px;" class="img-fluid" alt="">  </td>
+                        <td>  <img src="{{p.thumbnail.url}}" style="height:50px;" class="img-fluid" alt="">  </td>
                         <td>{{p.selling_price|intcomma}} đ</td>
                         <td>{{p.view_count}}</td>
+                        <td > <a href="{% url 'ecomapp:adminproductdelete' p.id %}" class="btn btn-outline-secondary">X</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
