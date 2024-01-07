@@ -17,42 +17,51 @@
           {% endfor %}
         </div>
       </div>
-
-
     </div>
 
-    <div class="col-md-6 col-sm-12" > 
+    <div class="col-md-3 col-sm-12" > 
+      <div class="home-card-filter" >
+        <div class="home-card-filter-name">
+          <h5>Filter by Sex</h5>
+          
+          <input class="filter-checkbox" type="checkbox" data-filter="product_sex" value="True"> Male <br> 
+          <input class="filter-checkbox" type="checkbox" data-filter="product_sex" value="False"> Female <br> 
+          
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-6 col-sm-12" > 
       <div class="home-card-filter" >
         <div class="home-card-filter-name" >
           <h5>Filter By Size</h5>
           <div class="row">
             <div class="col-4" >
-              <input class="filter-checkbox" type="checkbox" value="6"  data-filter="productsize" > Size 6 <br> 
+              <input class="filter-checkbox" type="checkbox" value="6"  data-filter="productsize" > Size 6   <br> 
               <input class="filter-checkbox" type="checkbox" value="6h" data-filter="productsize" > Size 6h  <br>
-              <input class="filter-checkbox" type="checkbox" value="7"  data-filter="productsize" > Size 7 <br>
+              <input class="filter-checkbox" type="checkbox" value="7"  data-filter="productsize" > Size 7   <br>
               <input class="filter-checkbox" type="checkbox" value="7h" data-filter="productsize" > Size 7h  <br>
-              <input class="filter-checkbox" type="checkbox" value="8"  data-filter="productsize" > Size 8  <br>
-              <input class="filter-checkbox" type="checkbox" value="8h" data-filter="productsize" > Size 8h    <br>
+              <input class="filter-checkbox" type="checkbox" value="8"  data-filter="productsize" > Size 8   <br>
+              <input class="filter-checkbox" type="checkbox" value="8h" data-filter="productsize" > Size 8h  <br>
             </div>
             <div class="col-4" >
-              <input class="filter-checkbox" type="checkbox" value="9"  data-filter="productsize" > Size 9 <br> 
+              <input class="filter-checkbox" type="checkbox" value="9"  data-filter="productsize" > Size 9   <br> 
               <input class="filter-checkbox" type="checkbox" value="9h" data-filter="productsize" > Size 9h  <br>
               <input class="filter-checkbox" type="checkbox" value="10" data-filter="productsize" > Size 10  <br>
-              <input class="filter-checkbox" type="checkbox" value="10h"data-filter="productsize" > Size 10h  <br>
+              <input class="filter-checkbox" type="checkbox" value="10h"data-filter="productsize" > Size 10h <br>
               <input class="filter-checkbox" type="checkbox" value="11" data-filter="productsize" > Size 11  <br>           
             </div>
             <div class="col-4" >
-              <input type="checkbox" value="6"> Size S <br> 
-              <input type="checkbox" value="6"> Size M  <br>
-              <input type="checkbox" value="6"> Size L  <br>
-              <input type="checkbox" value="6"> Size Xl  <br>
+              <input type="checkbox" value="6"> Size S    <br> 
+              <input type="checkbox" value="6"> Size M    <br>
+              <input type="checkbox" value="6"> Size L    <br>
+              <input type="checkbox" value="6"> Size Xl   <br>
               <input type="checkbox" value="6"> Size XXL  <br>           
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
-    </div>
+    <!-- </div> -->
 
     <div class="col-md-3 col-sm-12" > 
       <div class="home-card-filter" >
@@ -70,10 +79,14 @@
 
   <div class="row mt-5" id="filtered-product" >
     {% for p in product_list %}
-    <div class="col-md-3 col-sm-6 col-6 card ml-0 mt-1" >
+    <div class="col-md-3 col-sm-6 col-6 card ml-0 mt-0" >
       <h5 class="mt-3 text-center ">
         <p>{{p.title}}</p>
-        
+        {% if p.sex == True %}
+        <p>Nam</p>
+        {% else  %}
+        <p>Nữ</p>
+        {% endif %}
       </h5>
       <a href="{%  url 'ecomapp:productdetail' p.slug %}">
         <img  class="img-fluid  " src="{{p.thumbnail.url}}" alt=""  />

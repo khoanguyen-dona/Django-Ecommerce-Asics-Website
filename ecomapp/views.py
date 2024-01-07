@@ -126,7 +126,7 @@ class AddToCartView(TemplateView):
         if product_size :
             pass       
         else:
-            messages.success(request, 'Vui lòng chọn Size')
+            messages.error(request, 'Vui lòng chọn Size')
             return redirect(pre_url)
         product_obj=Product.objects.get(id=product_id)
         # cart id session
@@ -149,7 +149,7 @@ class AddToCartView(TemplateView):
                 # nếu chung product nhưng khác size    
                 else:
                     cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
-                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size)
+                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size,sex=product_obj.sex)
                     cart_obj.total+=product_obj.selling_price
                     cart_obj.count+=1
                     cart_obj.save()
@@ -157,7 +157,7 @@ class AddToCartView(TemplateView):
             # sản phẩm chưa từng xuất hiện trong cart ta tạo mới
             else:
                 cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
-                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size)
+                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size,sex=product_obj.sex)
                 cart_obj.total+=product_obj.selling_price
                 cart_obj.count+=1
                 cart_obj.save()
@@ -166,7 +166,7 @@ class AddToCartView(TemplateView):
             cart_obj=Cart.objects.create(total=0,count=1)
             self.request.session['cart_session']=cart_obj.id
             cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,rate=product_obj.selling_price,
-                                                   quantity=1,subtotal=product_obj.selling_price,size=product_size)
+                                                   quantity=1,subtotal=product_obj.selling_price,size=product_size,sex=product_obj.sex)
             cart_obj.total+=product_obj.selling_price
             if self.request.user.is_authenticated:
                 cart_obj.customer=self.request.user.customer
@@ -354,7 +354,6 @@ class CheckoutView(CreateView):
         if cart_session:
             cart_obj=Cart.objects.get(id=cart_session)
             form.instance.cart=cart_obj
-            form.instance.subtotal=cart_obj.total
             form.instance.discount=0
             form.instance.total=cart_obj.total
             form.instance.order_status="Order received"
@@ -883,8 +882,38 @@ class AdminProductCreateView(AdminRequiredMixin,CreateView):
         else:
             size_11=False
 
+        if self.request.POST.get('size_S') == 'checked':
+            size_S=True
+        else:
+            size_S=False
+
+        if self.request.POST.get('size_M') == 'checked':
+            size_M=True
+        else:
+            size_M=False
+
+        if self.request.POST.get('size_L') == 'checked':
+            size_L=True
+        else:
+            size_L=False
+
+        if self.request.POST.get('size_XL') == 'checked':
+            size_XL=True
+        else:
+            size_XL=False
+
+        if self.request.POST.get('size_XXL') == 'checked':
+            size_XXL=True
+        else:
+            size_XXL=False
+
+        if self.request.POST.get('sex') == 'checked':
+            p.sex=True
+        else:
+            p.sex=False   
         ps=ProductSize.objects.create(product=p,size_6=size_6,size_6h=size_6h,size_7=size_7,size_7h=size_7h,size_8=size_8,size_8h=size_8h
-                                      ,size_9=size_9,size_9h=size_9h,size_10=size_10,size_10h=size_10h,size_11=size_11)
+                                      ,size_9=size_9,size_9h=size_9h,size_10=size_10,size_10h=size_10h,size_11=size_11
+                                      ,size_S=size_S,size_M=size_M,size_L=size_L,size_XL=size_XL,size_XXL=size_XXL)
         ps.save()
 
 
@@ -900,14 +929,16 @@ class AdminProductDeleteView(AdminRequiredMixin,TemplateView):
 def filter_product(request):
     categories_id=request.GET.getlist('category[]')
     productname_id=request.GET.getlist('productname[]')
-    productsize=request.GET.getlist('productsize[]')
+    product_sex=request.GET.getlist('product_sex[]')
+
     products=Product.objects.all().distinct()
+
     if len(categories_id) > 0:
         products=products.filter(category__id__in=categories_id).distinct()
     if len(productname_id) > 0:
         products=products.filter(id__in=productname_id).distinct()
-    if len(productsize) > 0:
-        products=products.filter()
+    if len(product_sex) > 0:
+        products=products.filter(sex__in=product_sex).distinct()
 
     if request.user.is_authenticated:
         if WishList.objects.filter(customer=request.user.customer).exists():

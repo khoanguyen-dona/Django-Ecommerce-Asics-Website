@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
-{% block title %}{{product.title}}{% endblock %}
+{% block title %}{{product.title}}{% endblock title %}
 
 {% block content %}
 <style>
@@ -31,17 +31,17 @@
     
     <div class="row mt-5" >
         
-        <div class="col-md-7 card-border productdetail-thumbnail " >
+        <div class="col-md-7 card-border productdetail-thumbnail col-sm-12 m-2" >
             <img id="thumbnail" class="productdetail-main-img img-fluid mt-3" src="{{product.thumbnail.url}}" alt="">
             <div class="row " >
                 
-                <div class="col-md-2" >
+                <div class="col-md-2 col-2 " >
                     <a href="{{product.thumbnail.url}}" >
                         <img class="images active img-fluid"  src="{{product.thumbnail.url}}"  >
                     </a>
                 </div>
                 {% for pi in product.productimage_set.all %}
-                <div class="col-md-2 " >
+                <div class="col-md-2 col-2" >
                     <a href="{{pi.image.url}}" >
                         <img  class="images img-fluid"  src="{{pi.image.url}}" alt="" >
                     </a>
@@ -52,8 +52,13 @@
             
 
 
-        <div class="col-md-4 productdetail-desc  card-border py-2" >
+        <div class="col-md-4  productdetail-desc  card-border py-2 col-sm-12 m-2" >
             <h4>{{product.title}}  </h4>
+            {% if product.sex == True %}
+            <h6>Nam</h6>
+            {% else  %}
+            <h6>Nữ</h6>
+            {% endif %}
             <p>(Viewed:{{product.view_count}}times)</p>
             <!-- <h5>Category : {{product.category}}</h5> -->
             <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
@@ -71,6 +76,8 @@
             <hr>
 
             <p id="size-chosen">Kích thước (US) :</p>
+
+            {% if product.category.title == 'shoes' %}
 
             {% if product.productsize.size_6 == True %}
             <div class="product-size-number-true product-size " value="6">6</div>
@@ -138,24 +145,68 @@
             <span class="product-size-number-false ">11</span>
             {%  endif %} 
 
+            {% endif %}
 
+
+
+            {% if product.category.title == 'shirts' %}
+            {% if product.category.title == 'pants' %}
             
-            <p>{{product.description}}</p>
+            {% if product.productsize.size_S == True %}
+            <span class="product-size-number-true product-size" value="S">S</span>
+            {% else %} 
+            <span class="product-size-number-false ">S</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_M == True %}
+            <span class="product-size-number-true product-size" value="M">M</span>
+            {% else %} 
+            <span class="product-size-number-false ">M</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_L == True %}
+            <span class="product-size-number-true product-size" value="L">L</span>
+            {% else %} 
+            <span class="product-size-number-false ">L</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_XL == True %}
+            <span class="product-size-number-true product-size" value="XL">XL</span>
+            {% else %} 
+            <span class="product-size-number-false ">XL</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_XXL == True %}
+            <span class="product-size-number-true product-size" value="XXL">XXL</span>
+            {% else %} 
+            <span class="product-size-number-false ">11</span>
+            {%  endif %} 
+
+            {% endif %}
+            {% endif %}
+           
+
+            <p class="mt-5 mb-0"><b>Miễn phí</b> vận chuyển cho đơn hàng trên 1.500.000đ</p>
+            <p class="mb-0" ><b>Dễ dàng</b> hoàn trả hàng</p>
+            <p class="mb-0" ><b> Tham gia OneAsic</b> ngay để được miễn phí vận chuyển tất cả đơn hàng</p>
+            <p class="mb-0" >Sale lớn 30%-70% <a href="#">Mua ngay</a> </p>
+            
+            
         </div>
     </div>
 
-</div>
+    
+    <div class="row">
 
-
-
-<div class="sub-desc-outer" >
-    <div class="sub-desc" >
-        <div>Thông tin sản phẩm</div>
-        <div>Đặc điểm kĩ thuật</div>
+        <div  class="col-md-12 sub-desc-outer m-2">  
+            <div class="sub-desc bg-white p-2  card-border" >
+                <b>Thông tin sản phẩm</b>
+                <div>{{product.description}}</div>
+            </div>     
+        </div>
     </div>
+    
 </div>
-
-
 <!-- hover hình -->
 <script  type="text/javascript">
     let images=document.getElementsByClassName('images')

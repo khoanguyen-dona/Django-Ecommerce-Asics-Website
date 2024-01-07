@@ -1,10 +1,14 @@
 {% load humanize %}
 {% load static %}
 {% for p in products %}
-    <div class="col-md-3 col-sm-6 col-6 card ml-0 mt-1" >
+    <div class="col-md-3 col-sm-6 col-6 card ml-0 mt-0" >
       <h5 class="mt-3 text-center ">
         <p>{{p.title}}</p>
-        
+        {% if p.gioitinh == True %}
+        <p>Nam</p>
+        {% else  %}
+        <p>Nữ</p>
+        {% endif %}
       </h5>
       <a href="{%  url 'ecomapp:productdetail' p.slug %}">
         <img  class="img-fluid  " src="{{p.thumbnail.url}}" alt=""  />
