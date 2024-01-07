@@ -1,14 +1,76 @@
-{% extends 'base.html' %} {% load humanize %} 
+{% extends 'base.html' %} 
+{% load humanize %} 
 {% load static %}
-{% block title %} Home {% endblock%} 
+{% block title %} Home {% endblock %} 
 {% block content %}
 
 <div class="container">
   <h3 class="mt-2" >Home</h3>
-  <hr>
-  <div class="row mt-5">
+
+  <div class=" row ">
+    <div class="col-md-3 col-sm-12" > 
+      <div class="home-card-filter" >
+        <div class="home-card-filter-name">
+          <h5>Filter by Product name</h5>
+          {% for p in products  %}
+          <input class="filter-checkbox" type="checkbox" data-filter="productname" value="{{p.id}}"> {{p.title}} <br> 
+          {% endfor %}
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="col-md-6 col-sm-12" > 
+      <div class="home-card-filter" >
+        <div class="home-card-filter-name" >
+          <h5>Filter By Size</h5>
+          <div class="row">
+            <div class="col-4" >
+              <input class="filter-checkbox" type="checkbox" value="6"  data-filter="productsize" > Size 6 <br> 
+              <input class="filter-checkbox" type="checkbox" value="6h" data-filter="productsize" > Size 6h  <br>
+              <input class="filter-checkbox" type="checkbox" value="7"  data-filter="productsize" > Size 7 <br>
+              <input class="filter-checkbox" type="checkbox" value="7h" data-filter="productsize" > Size 7h  <br>
+              <input class="filter-checkbox" type="checkbox" value="8"  data-filter="productsize" > Size 8  <br>
+              <input class="filter-checkbox" type="checkbox" value="8h" data-filter="productsize" > Size 8h    <br>
+            </div>
+            <div class="col-4" >
+              <input class="filter-checkbox" type="checkbox" value="9"  data-filter="productsize" > Size 9 <br> 
+              <input class="filter-checkbox" type="checkbox" value="9h" data-filter="productsize" > Size 9h  <br>
+              <input class="filter-checkbox" type="checkbox" value="10" data-filter="productsize" > Size 10  <br>
+              <input class="filter-checkbox" type="checkbox" value="10h"data-filter="productsize" > Size 10h  <br>
+              <input class="filter-checkbox" type="checkbox" value="11" data-filter="productsize" > Size 11  <br>           
+            </div>
+            <div class="col-4" >
+              <input type="checkbox" value="6"> Size S <br> 
+              <input type="checkbox" value="6"> Size M  <br>
+              <input type="checkbox" value="6"> Size L  <br>
+              <input type="checkbox" value="6"> Size Xl  <br>
+              <input type="checkbox" value="6"> Size XXL  <br>           
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-3 col-sm-12" > 
+      <div class="home-card-filter" >
+        <div class="home-card-filter-name" >
+          <h5>Filter By Categories</h5>
+          {% for cat in categories %}
+          <input class="filter-checkbox" type="checkbox" data-filter="category" value="{{cat.id}}"> {{cat.title}} <br> 
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+<hr>
+
+  <div class="row mt-5" id="filtered-product" >
     {% for p in product_list %}
-    <div class="col-md-3 card ml-1 mt-1" style="left: 300px">
+    <div class="col-md-3 col-sm-6 col-6 card ml-0 mt-1" >
       <h5 class="mt-3 text-center ">
         <p>{{p.title}}</p>
         
@@ -35,7 +97,16 @@
 
     </div>
     {% endfor %}
+ 
+    
   </div>
+  
+  
+
+
+
+
+
     <div class="row mt-5  ">
         <div class="col-md-12 d-flex justify-content-center">
             <nav aria-label="Page navigation ">
@@ -74,5 +145,39 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function(){
+  // $('.loader').hide()
+  $('.filter-checkbox').on('click',function(){
+    let filter_object={}
+    $('.filter-checkbox').each(function(){
+      let filter_value=$(this).val()
+      let filter_key=$(this).data('filter')
+      filter_object[filter_key]=Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function(element){
+        return element.value
+      })
+    })
+    console.log('Filter object is : ',filter_object)
+    $.ajax({
+      url:'/filter-product',
+      data: filter_object,
+      // method:'get',
+      dataType:'json',
+      beforeSend: function(){
+        console.log("Trying to filter the product...")
+      },
+      success: function(response){
+        console.log(response)
+        console.log("data filtered successfully...")
+        $('#filtered-product').html(response.data)
+      }
+    });
+  });
+});
+
+
+</script>
+
 
 {% endblock content %}

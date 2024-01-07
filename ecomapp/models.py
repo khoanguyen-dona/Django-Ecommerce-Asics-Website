@@ -30,7 +30,7 @@ class Category(models.Model):
     slug=models.SlugField(unique=True)
 
     def __str__(self):
-        return self.title
+        return self.title+ '___#'+ str(self.id)
 
 class Product(models.Model):
     title=models.CharField(max_length=200)

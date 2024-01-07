@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from . import views
 app_name='ecomapp'
 urlpatterns=[
     # store------------------
@@ -10,6 +11,7 @@ urlpatterns=[
     path('product/<slug:slug>/',ProductDetailView.as_view(),name='productdetail'),
     path('my-cart/',MyCartView.as_view(),name='mycart'),
     path('wish-list/',WishListView.as_view(),name='wishlist'),
+    path('filter-product/',views.filter_product,name='filter-product'),
     
     path('add-to-cart-<int:pro_id>/',AddToCartView.as_view(),name='addtocart'),
     path('manage-cart/<int:cp_id>/',ManageCartView.as_view(),name='managecart'),

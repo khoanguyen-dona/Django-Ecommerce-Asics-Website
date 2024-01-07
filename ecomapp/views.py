@@ -9,6 +9,8 @@ from django.core.paginator import Paginator
 from .utils import password_reset_token
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 class HomeView(TemplateView):
     template_name='home.html'
@@ -36,10 +38,16 @@ class HomeView(TemplateView):
         else:
             cart=None    
 
-        all_products=Product.objects.all().order_by('-id')
-        paginator=Paginator(all_products,12)
+        categories=Category.objects.all()
+        product_size=ProductSize.objects.all()
+        products=Product.objects.all()
+        all_products=Product.objects.all()
+        paginator=Paginator(all_products,24)
         page_number=self.request.GET.get('page')
         product_list=paginator.get_page(page_number)
+        context['categories']=categories
+        context['product_size']=product_size
+        context['products']=products
         context['cart']=cart
         context['product_list']=product_list    
         return context
@@ -113,9 +121,13 @@ class AddToCartView(TemplateView):
     
     def get(self,request,*args,**kwargs):
         pre_url = request.META.get('HTTP_REFERER')
-        product_id=self.kwargs['pro_id']
+        product_id=self.kwargs['pro_id']        
         product_size=self.request.GET['s']
-        # product in database
+        if product_size :
+            pass       
+        else:
+            messages.success(request, 'Vui lòng chọn Size')
+            return redirect(pre_url)
         product_obj=Product.objects.get(id=product_id)
         # cart id session
         cart_session=self.request.session.get("cart_session", None)
@@ -878,9 +890,37 @@ class AdminProductCreateView(AdminRequiredMixin,CreateView):
 
         return super().form_valid(form)
     
-class AdminProductDeleteView(AdminRequiredMixin,CreateView):
+class AdminProductDeleteView(AdminRequiredMixin,TemplateView):
     def get(self,request,*args,**kwargs):
         product_id=self.kwargs['pk']
         product_obj=Product.objects.get(id=product_id)
         product_obj.delete()
         return redirect('ecomapp:adminproductlist')
+ 
+def filter_product(request):
+    categories_id=request.GET.getlist('category[]')
+    productname_id=request.GET.getlist('productname[]')
+    productsize=request.GET.getlist('productsize[]')
+    products=Product.objects.all().distinct()
+    if len(categories_id) > 0:
+        products=products.filter(category__id__in=categories_id).distinct()
+    if len(productname_id) > 0:
+        products=products.filter(id__in=productname_id).distinct()
+    if len(productsize) > 0:
+        products=products.filter()
+
+    if request.user.is_authenticated:
+        if WishList.objects.filter(customer=request.user.customer).exists():
+            wishlist=WishList.objects.get(customer=request.user.customer)
+            product_in_wishlist = []
+            for i in wishlist.wishlistitem_set.all():
+                product_in_wishlist.append(i.product)
+            
+            context={'wishlist':wishlist}   
+            context={'product_in_wishlist':product_in_wishlist}
+        
+    
+    context={'products':products}
+    data=render_to_string("async/product-list.html",context)
+    return JsonResponse({'data':data})
+
