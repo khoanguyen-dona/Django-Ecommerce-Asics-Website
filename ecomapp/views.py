@@ -42,7 +42,7 @@ class HomeView(TemplateView):
         product_size=ProductSize.objects.all()
         products=Product.objects.all()
         all_products=Product.objects.all()
-        paginator=Paginator(all_products,24)
+        paginator=Paginator(all_products,48)
         page_number=self.request.GET.get('page')
         product_list=paginator.get_page(page_number)
         context['categories']=categories
