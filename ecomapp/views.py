@@ -926,17 +926,18 @@ class AdminProductDeleteView(AdminRequiredMixin,TemplateView):
         product_obj.delete()
         return redirect('ecomapp:adminproductlist')
  
+
 def filter_product(request):
     categories_id=request.GET.getlist('category[]')
-    productname_id=request.GET.getlist('productname[]')
+    productline=request.GET.getlist('productline[]')
     product_sex=request.GET.getlist('product_sex[]')
 
     products=Product.objects.all().distinct()
 
     if len(categories_id) > 0:
         products=products.filter(category__id__in=categories_id).distinct()
-    if len(productname_id) > 0:
-        products=products.filter(id__in=productname_id).distinct()
+    if len(productline) > 0:
+        products=products.filter(line__in=productline).distinct()
     if len(product_sex) > 0:
         products=products.filter(sex__in=product_sex).distinct()
 
@@ -950,7 +951,7 @@ def filter_product(request):
             context={'wishlist':wishlist}   
             context={'product_in_wishlist':product_in_wishlist}
         
-    
+
     context={'products':products}
     data=render_to_string("async/product-list.html",context)
     return JsonResponse({'data':data})

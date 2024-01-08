@@ -31,7 +31,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title+ '___#'+ str(self.id)
-
+    
 class Product(models.Model):
     title=models.CharField(max_length=200)
     slug=models.SlugField(unique=True)
@@ -42,6 +42,7 @@ class Product(models.Model):
     description=models.TextField(blank=True)  
     view_count=models.BigIntegerField(default=0)
     sex=models.BooleanField(blank=True,default=False)
+    line=models.CharField(null=True,blank=True,max_length=200)
     
 
     def __str__(self):

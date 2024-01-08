@@ -149,8 +149,8 @@
 
 
 
-            {% if product.category.title == 'shirts' %}
-            {% if product.category.title == 'pants' %}
+            {% if product.category.title == 'shirts' or product.category.title == 'pants' or product.category.title == 'socks' %}
+            
             
             {% if product.productsize.size_S == True %}
             <span class="product-size-number-true product-size" value="S">S</span>
@@ -183,11 +183,11 @@
             {%  endif %} 
 
             {% endif %}
-            {% endif %}
+            
            
 
             <p class="mt-5 mb-0"><b>Miễn phí</b> vận chuyển cho đơn hàng trên 1.500.000đ</p>
-            <p class="mb-0" ><b>Dễ dàng</b> hoàn trả hàng</p>
+            <p class="mb-0" ><b>Dễ dàng</b> hoàn trả hàng <a href="#">Xem thêm</a>  </p>
             <p class="mb-0" ><b> Tham gia OneAsic</b> ngay để được miễn phí vận chuyển tất cả đơn hàng</p>
             <p class="mb-0" >Sale lớn 30%-70% <a href="#">Mua ngay</a> </p>
             
@@ -197,7 +197,6 @@
 
     
     <div class="row">
-
         <div  class="col-md-12 sub-desc-outer m-2">  
             <div class="sub-desc bg-white p-2  card-border" >
                 <b>Thông tin sản phẩm</b>
