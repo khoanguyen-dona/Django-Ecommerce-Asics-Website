@@ -263,3 +263,25 @@ header{
     margin-left:10px;
     margin-top:10px;
 }
+
+.admin-login-form{
+    background-color:white;
+    border-radius:10px;
+    margin-top:20px;
+    width:100%;
+    padding: 20px;
+}
+.register-form{
+    background-color:white;
+    border-radius:10px;
+    margin-top:20px;
+    width:100%;
+    padding: 20px;
+}
+.login-form{
+    background-color:white;
+    border-radius:10px;
+    margin-top:20px;
+    width:100%;
+    padding: 20px;
+}
