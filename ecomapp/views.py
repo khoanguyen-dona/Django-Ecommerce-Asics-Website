@@ -18,7 +18,7 @@ class HomeView(TemplateView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated :
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
                 product_in_wishlist = []
@@ -86,7 +86,7 @@ class ProductDetailView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated  and Customer.objects.filter(user=self.request.user).exists() : 
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
                 product_in_wishlist = []

@@ -11,14 +11,14 @@
             <div class="row  card-border mt-3  card-white py-3" >
                 <div class="col-md-4  " >
                     <a href="{% url 'ecomapp:productdetail'  result.slug %}">
-                        <img class="rounded" src="{{ result.image.url }}" alt="" width="285px" >
+                        <img class="rounded" src="{{ result.thumbnail.url }}" alt="" width="285px" >
                     </a>
                 </div>
                 <div class="col-md-8" >
                     <h4> <a href="{% url 'ecomapp:productdetail'  result.slug %}"> {{result.title}} </a> </h4>
                     <p>{{result.description|truncatewords:30}}</p>
                     <h4>  <small><strike>{{result.marked_price|intcomma}}</strike></small> {{result.selling_price|intcomma}} đ</h4>
-                    <a href="{% url 'ecomapp:addtocart'  result.id %}" class="btn btn-outline-primary  mb-3">Add to cart</a>
+                    <a href="{% url 'ecomapp:productdetail'  result.slug %}" class="btn btn-outline-primary  mb-3">Xem thêm</a>
                 </div>
             </div>
             {% endfor %}

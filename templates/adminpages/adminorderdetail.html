@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container mt-2" >
-    <a class='btn btn-outline-primary active' href="{% url 'ecomapp:adminhome' %}">Home</a> 
+    <a class='btn btn-outline-primary ' href="{% url 'ecomapp:adminhome' %}">Home</a> 
     <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderlist' %}">All Orders</a> 
     <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderreceived' %}">Received Orders</a>
     <a class='btn btn-outline-primary' href="{% url 'ecomapp:adminorderprocessing' %}">Processing Orders</a>
@@ -42,6 +42,7 @@
                         <th>Item</th>
                         <th>Image</th>
                         <th>Size</th>
+                        <th>Sex</th>
                         <th>Rate</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -54,13 +55,18 @@
                         <td> <a href="{% url 'ecomapp:productdetail' cp.product.slug %}" > {{cp.product.title}}   </a> </td>
                         <td><img class="img-fluid" style="width:100px;" src="{{cp.product.thumbnail.url}}" alt=""></td>
                         <td>{{cp.size}} (US)</td>
+                        {% if cp.sex == 'True' %}
+                        <td>Nam</td>
+                        {%  else %}
+                        <td>Nữ</td>
+                        {% endif %}
                         <td>{{cp.rate|intcomma}} đ</td>
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal|intcomma}} đ </td>
                     {% endfor %}    
                     </tr>
                     <tr>
-                        <th colspan="6" class=" text-right" >Total:</th>
+                        <th colspan="7" class=" text-right" >Total:</th>
                         <th >{{order_obj.total|intcomma}} đ</th>
                     </tr>
                 </tbody>
