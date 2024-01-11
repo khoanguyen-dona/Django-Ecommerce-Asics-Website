@@ -749,16 +749,9 @@ class AdminOrderListView(AdminRequiredMixin,TemplateView):
             context['allorders']=Order.objects.all().order_by('-id')
             return context
     
-<<<<<<< HEAD
 class AdminOrderStatusChangeView(AdminRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         pre_url = request.META.get('HTTP_REFERER')
-=======
-class AdminOrderStatusChangeView(AdminRequiredMixin,TemplateView):
-    
-    def post(self,request,*args,**kwargs):
-        
->>>>>>> home.html-filter
         ord_id=self.kwargs['pk']
         ord_obj=Order.objects.get(id=ord_id)
         new_status=request.POST['status']
