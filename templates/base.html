@@ -13,10 +13,10 @@
 <!-- header -->
 <header >
     <div class="container  " >
-        <a href="{% url 'ecomapp:home' %}"  class="text-white ">Home </a>
+        <a href="{% url 'ecomapp:home' %}"  class="text-white "><img style="width:30px;" src="{% static 'images/logo-asics.png' %}" alt=""> <strong class >ASICS </strong> </a>
         <a href="{% url 'ecomapp:about'  %}" class="text-white ml-2">About us </a>
         <a href="{% url 'ecomapp:contact' %}"class="text-white ml-2">Contact us </a>
-        <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a>
+        <!-- <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a> -->
         {% if cart.count %}
         <a href="{% url 'ecomapp:mycart' %}"class="ml-2"> 
             <span>
