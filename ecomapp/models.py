@@ -30,8 +30,8 @@ class Category(models.Model):
     slug=models.SlugField(unique=True)
 
     def __str__(self):
-        return self.title
-
+        return self.title+ '___#'+ str(self.id)
+    
 class Product(models.Model):
     title=models.CharField(max_length=200)
     slug=models.SlugField(unique=True)
@@ -39,13 +39,37 @@ class Product(models.Model):
     thumbnail=models.ImageField(upload_to='products/thumbnails')
     marked_price=models.BigIntegerField()
     selling_price=models.BigIntegerField()
-    description=models.TextField()  
-    warranty=models.CharField(max_length=300,null=True,blank=True)
-    return_policy=models.CharField(max_length=300,null=True,blank=True)
+    description=models.TextField(blank=True)  
     view_count=models.BigIntegerField(default=0)
+    sex=models.BooleanField(blank=True,default=False)
+    line=models.CharField(null=True,blank=True,max_length=200)
+    
 
     def __str__(self):
         return self.title + '___#'+ str(self.id)
+    
+class ProductSize(models.Model):
+    product=models.OneToOneField(Product,on_delete=models.CASCADE)
+    size_6=models.BooleanField(blank=True)
+    size_6h=models.BooleanField(blank=True)
+    size_7=models.BooleanField(blank=True)
+    size_7h=models.BooleanField(blank=True)
+    size_8=models.BooleanField(blank=True)
+    size_8h=models.BooleanField(blank=True)
+    size_9=models.BooleanField(blank=True)
+    size_9h=models.BooleanField(blank=True)
+    size_10=models.BooleanField(blank=True)
+    size_10h=models.BooleanField(blank=True)
+    size_11=models.BooleanField(blank=True)
+    size_S=models.BooleanField(blank=True,default=False)
+    size_M=models.BooleanField(blank=True,default=False)   
+    size_L=models.BooleanField(blank=True,default=False)   
+    size_XL=models.BooleanField(blank=True,default=False)   
+    size_XXL=models.BooleanField(blank=True,default=False)   
+
+    
+    def __str__(self):
+        return self.product.title
 
 class WishList(models.Model):
     customer=models.OneToOneField(Customer,on_delete=models.CASCADE,null=True,blank=True)
@@ -83,6 +107,9 @@ class CartProduct(models.Model):
     rate=models.BigIntegerField()
     quantity=models.BigIntegerField()
     subtotal=models.BigIntegerField()
+    size=models.CharField(null=True,blank=True,max_length=10)
+    sex=models.CharField(max_length=10,blank=True,null=True)
+
 
     def __str__(self):
         return 'Cart: '+str(self.cart.id) + 'CartProduct: '+str(self.id)
@@ -102,7 +129,7 @@ class Order(models.Model):
     shipping_address=models.CharField(max_length=200)
     mobile=models.CharField(max_length=12)
     email=models.EmailField(null=True,blank=True)
-    subtotal=models.BigIntegerField()
+    # subtotal=models.BigIntegerField()
     discount=models.BigIntegerField()
     total=models.BigIntegerField()
     order_status=models.CharField(max_length=50,choices=ORDER_STATUS)

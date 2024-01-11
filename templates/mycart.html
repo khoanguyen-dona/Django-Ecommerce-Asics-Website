@@ -15,6 +15,8 @@ My cart
                         <th>#</th>
                         <th>Image</th>
                         <th>Product</th>
+                        <th>Size</th>
+                        <th>Sex</th>
                         <th>Rate</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -29,8 +31,14 @@ My cart
                             <img  class="img-fluid  " width="100px"  src="{{cp.product.thumbnail.url}}" alt="">
                         </td>
                         <td>{{cp.product.title}}</td>
+                        <td>{{cp.size}} (US)</td>
+                        {% if cp.sex == 'True' %}
+                        <td>Nam</td>
+                        {% else  %}
+                        <td>Nữ</td>
+                        {% endif %}
                         <td>{{cp.rate|intcomma}} đ</td>
-                        <td>{{cp.quantity}}</td>
+                        <td  >{{cp.quantity}}</td>
                         <td>{{cp.subtotal|intcomma}} đ</td>
                         <td>
                             <a href="{% url 'ecomapp:managecart' cp.id %}?action=inc" class="btn btn-outline-success">+</a>
@@ -41,7 +49,7 @@ My cart
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th  colspan="5" class="text-right">Total:</th>
+                        <th  colspan="7" class="text-right">Total:</th>
                         <th>{{cart.total|intcomma}} đ</th>
                         {% if cart.cartproduct_set.all %}
                         <th> <a href="{% url 'ecomapp:emptycart' %}" class="btn btn-secondary btn-sm"> Delete all</a> </th>

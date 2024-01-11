@@ -40,7 +40,11 @@
                         <td>{{order.ordered_by}}</td>
                         <td>{{order.created_at}} ({{order.created_at|timesince}})</td>
                         <td>{{order.total|intcomma}} đ</td>
-                        <td>{{order.order_status}}</td>
+                        {% if order.order_status == 'Order canceled' %}
+                        <td class="text-danger font-weight-bold " >{{order.order_status}}</td>
+                        {% else  %}
+                        <td class="text-success font-weight-bold " >{{order.order_status}}</td>
+                        {%  endif %}
                         <td> <a href="{% url 'ecomapp:admindeleteorder'  order.id %}"  class="btn btn-block btn-outline-secondary">x</a> </td>
                     </tr>
                     {% endfor %}

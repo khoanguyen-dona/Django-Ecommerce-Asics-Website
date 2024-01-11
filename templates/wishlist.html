@@ -1,6 +1,8 @@
-{% extends 'base.html' %} {% load humanize %} 
+{% extends 'base.html' %} 
+{% load humanize %} 
 {% load static %}
-{% block title %} Wish list {% endblock%} 
+{% block title %} Wish list {% endblock %} 
+
 {% block content %}
 
 <div class="container">
@@ -12,27 +14,31 @@
     <hr>
   <div class="row mt-5">
     {% for p in wishlist.wishlistitem_set.all %}
-    <div class="col-md-3 card ml-1 mt-1" style="left: 300px">
-      <h3 class="mt-3 text-center ">
-        <p>{{p.product.title}}</p>
-        
-      </h3>
+    <div class="col-md-3 card " >
+
+      <h4 class="mt-3 text-center ">
+        <p>{{p.product.title}}</p> 
+      </h4>
+
       <a href="{%  url 'ecomapp:productdetail' p.product.slug %}">
         <img  class="img-fluid  " src="{{p.product.thumbnail.url}}" alt=""  />
       </a>
-      <strong><p>
-          Price:
+
+      <strong>
+        <p>Price:
           <small><strike>{{p.product.marked_price|intcomma}}</strike></small>
           {{p.product.selling_price|intcomma}} đ
-        </p></strong>
-      <div>
-        <a href="{% url 'ecomapp:addtocart'  p.product.id %}" class="btn btn-outline-primary mb-3 add-to-cart ">Add to cart</a>
-        <a href="{% url 'ecomapp:removefromwishlist'  p.id %}" class="ml-3 mb-3 btn btn-outline-secondary ">X
-          
-        </a>
+        </p>
+      </strong>
 
+      <div>
+        <a href="{% url 'ecomapp:removefromwishlist'  p.id %}" class=" mb-3 btn btn-outline-secondary btn-block">X</a>
       </div>  
 
     </div>
+
     {% endfor %}
-{% endblock content %}
+  </div>
+
+</div>
+{% endblock  %}

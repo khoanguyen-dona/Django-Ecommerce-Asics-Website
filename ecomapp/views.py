@@ -9,6 +9,8 @@ from django.core.paginator import Paginator
 from .utils import password_reset_token
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 class HomeView(TemplateView):
     template_name='home.html'
@@ -16,10 +18,15 @@ class HomeView(TemplateView):
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
 
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated :
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
-                context['wishlist']=wishlist
+                product_in_wishlist = []
+                for i in wishlist.wishlistitem_set.all():
+                    product_in_wishlist.append(i.product)
+                
+                context['wishlist']=wishlist   
+                context['product_in_wishlist']=product_in_wishlist
             else:
                 pass
         else:
@@ -31,10 +38,16 @@ class HomeView(TemplateView):
         else:
             cart=None    
 
-        all_products=Product.objects.all().order_by('-id')
-        paginator=Paginator(all_products,12)
+        categories=Category.objects.all()
+        product_size=ProductSize.objects.all()
+        products=Product.objects.all()
+        all_products=Product.objects.all()
+        paginator=Paginator(all_products,48)
         page_number=self.request.GET.get('page')
         product_list=paginator.get_page(page_number)
+        context['categories']=categories
+        context['product_size']=product_size
+        context['products']=products
         context['cart']=cart
         context['product_list']=product_list    
         return context
@@ -48,7 +61,12 @@ class AllProductsView(TemplateView):
         if self.request.user.is_authenticated:
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
+                product_in_wishlist = []
+                for i in wishlist.wishlistitem_set.all():
+                    product_in_wishlist.append(i.product)
+
                 context['wishlist']=wishlist
+                context['product_in_wishlist']=product_in_wishlist    
             else:
                 pass
         else:
@@ -68,9 +86,14 @@ class ProductDetailView(TemplateView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated  and Customer.objects.filter(user=self.request.user).exists() : 
             if WishList.objects.filter(customer=self.request.user.customer).exists():
                 wishlist=WishList.objects.get(customer=self.request.user.customer)
+                product_in_wishlist = []
+                for i in wishlist.wishlistitem_set.all():
+                    product_in_wishlist.append(i.product)
+      
+                context['product_in_wishlist']=product_in_wishlist
                 context['wishlist']=wishlist
             else:
                 pass
@@ -84,6 +107,9 @@ class ProductDetailView(TemplateView):
             cart=None  
 
         url_slug=self.kwargs['slug']
+        product = Product.objects.get(slug=url_slug)
+        product.view_count+=1
+        product.save()
         context['product']=Product.objects.get(slug=url_slug)
         context['cart']=cart
         
@@ -100,37 +126,52 @@ class AddToCartView(TemplateView):
     
     def get(self,request,*args,**kwargs):
         pre_url = request.META.get('HTTP_REFERER')
-        product_id=self.kwargs['pro_id']
-        # product in database
+        product_id=self.kwargs['pro_id']        
+        product_size=self.request.GET['s']
+        if product_size :
+            pass       
+        else:
+            messages.error(request, 'Vui lòng chọn Size')
+            return redirect(pre_url)
         product_obj=Product.objects.get(id=product_id)
         # cart id session
         cart_session=self.request.session.get("cart_session", None)
-        # if cart already exist 
+        # nếu cart đã tồn tại 
         if cart_session:
             cart_obj=Cart.objects.get(id=cart_session)
-            item_in_cart=cart_obj.cartproduct_set.filter(product=product_obj)
+            item_in_cart=cart_obj.cartproduct_set.filter(product=product_obj,size=product_size)
             # sản phẩm có trong cart thì không tạo mới,thực hiện logic + thêm
             if item_in_cart.exists():
-                cartproduct=item_in_cart.last()
-                cartproduct.quantity+=1
-                cartproduct.subtotal+=product_obj.selling_price
-                cartproduct.save()
-                cart_obj.total+=product_obj.selling_price
-                cart_obj.count+=1
-                cart_obj.save()
+                # nếu chung product và cùng 1 size
+                if product_size == item_in_cart.first().size:
+                    cartproduct=item_in_cart.first()
+                    cartproduct.quantity+=1
+                    cartproduct.subtotal+=product_obj.selling_price
+                    cartproduct.save()
+                    cart_obj.total+=product_obj.selling_price
+                    cart_obj.count+=1
+                    cart_obj.save()
+                # nếu chung product nhưng khác size    
+                else:
+                    cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
+                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size,sex=product_obj.sex)
+                    cart_obj.total+=product_obj.selling_price
+                    cart_obj.count+=1
+                    cart_obj.save()
+
             # sản phẩm chưa từng xuất hiện trong cart ta tạo mới
             else:
                 cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,
-                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price)
+                        rate=product_obj.selling_price,quantity=1,subtotal=product_obj.selling_price,size=product_size,sex=product_obj.sex)
                 cart_obj.total+=product_obj.selling_price
                 cart_obj.count+=1
                 cart_obj.save()
-        # create new cart if deos no  exits
+        # tạo cart nếu chưa có cart
         else:
             cart_obj=Cart.objects.create(total=0,count=1)
             self.request.session['cart_session']=cart_obj.id
             cartproduct=CartProduct.objects.create(cart=cart_obj,product=product_obj,rate=product_obj.selling_price,
-                                                   quantity=1,subtotal=product_obj.selling_price)
+                                                   quantity=1,subtotal=product_obj.selling_price,size=product_size,sex=product_obj.sex)
             cart_obj.total+=product_obj.selling_price
             if self.request.user.is_authenticated:
                 cart_obj.customer=self.request.user.customer
@@ -318,7 +359,6 @@ class CheckoutView(CreateView):
         if cart_session:
             cart_obj=Cart.objects.get(id=cart_session)
             form.instance.cart=cart_obj
-            form.instance.subtotal=cart_obj.total
             form.instance.discount=0
             form.instance.total=cart_obj.total
             form.instance.order_status="Order received"
@@ -695,17 +735,6 @@ class AdminOrderDetailView(AdminRequiredMixin,TemplateView):
         context['order_obj']=order_obj
         context['allstatus']=ORDER_STATUS
         return context
-# cach 2
-# class AdminOrderDetailView(AdminRequiredMixin,DetailView):
-#     template_name='adminpages/adminorderdetail.html'
-#     model=Order
-#     context_object_name='order_obj'
-
-#     def get_context_data(self, **kwargs):
-#         context=super().get_context_data(**kwargs)
-#         context['allstatus']=ORDER_STATUS
-#         return context
-
 
 class AdminLogoutView(TemplateView):
     def get(self,request):
@@ -720,12 +749,19 @@ class AdminOrderListView(AdminRequiredMixin,TemplateView):
             context['allorders']=Order.objects.all().order_by('-id')
             return context
     
+<<<<<<< HEAD
 class AdminOrderStatusChangeView(AdminRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         pre_url = request.META.get('HTTP_REFERER')
+=======
+class AdminOrderStatusChangeView(AdminRequiredMixin,TemplateView):
+    
+    def post(self,request,*args,**kwargs):
+        
+>>>>>>> home.html-filter
         ord_id=self.kwargs['pk']
         ord_obj=Order.objects.get(id=ord_id)
-        new_status=request.POST.get('status')
+        new_status=request.POST['status']
         ord_obj.order_status=new_status
         ord_obj.save()
         return redirect(pre_url)
@@ -808,11 +844,138 @@ class AdminProductListView(AdminRequiredMixin, TemplateView):
 class AdminProductCreateView(AdminRequiredMixin,CreateView):
     template_name='adminpages/adminproductcreate.html'
     form_class=ProductForm
+    
     success_url=reverse_lazy('ecomapp:adminproductlist')
+
 
     def form_valid(self,form):
         p=form.save()
         images=self.request.FILES.getlist('images')
         for i in images:
             ProductImage.objects.create(product=p,image=i)
+
+        if self.request.POST.get('size_6') == 'checked':
+            size_6=True
+        else:
+            size_6=False
+        if self.request.POST.get('size_6h') == 'checked':
+            size_6h=True
+        else:
+            size_6h=False
+
+        if self.request.POST.get('size_7') == 'checked':
+            size_7=True
+        else:
+            size_7=False
+        if self.request.POST.get('size_7h') == 'checked':
+            size_7h=True
+        else:
+            size_7h=False
+
+        if self.request.POST.get('size_8') == 'checked':
+            size_8=True
+        else:
+            size_8=False
+        if self.request.POST.get('size_8h') == 'checked':
+            size_8h=True
+        else:
+            size_8h=False
+
+        if self.request.POST.get('size_9') == 'checked':
+            size_9=True
+        else:
+            size_9=False
+        if self.request.POST.get('size_9h') == 'checked':
+            size_9h=True
+        else:
+            size_9h=False
+
+
+        if self.request.POST.get('size_10') == 'checked':
+            size_10=True
+        else:
+            size_10=False
+        if self.request.POST.get('size_10h') == 'checked':
+            size_10h=True
+        else:
+            size_10h=False
+
+        if self.request.POST.get('size_11') == 'checked':
+            size_11=True
+        else:
+            size_11=False
+
+        if self.request.POST.get('size_S') == 'checked':
+            size_S=True
+        else:
+            size_S=False
+
+        if self.request.POST.get('size_M') == 'checked':
+            size_M=True
+        else:
+            size_M=False
+
+        if self.request.POST.get('size_L') == 'checked':
+            size_L=True
+        else:
+            size_L=False
+
+        if self.request.POST.get('size_XL') == 'checked':
+            size_XL=True
+        else:
+            size_XL=False
+
+        if self.request.POST.get('size_XXL') == 'checked':
+            size_XXL=True
+        else:
+            size_XXL=False
+
+        if self.request.POST.get('sex') == 'checked':
+            p.sex=True
+        else:
+            p.sex=False   
+        ps=ProductSize.objects.create(product=p,size_6=size_6,size_6h=size_6h,size_7=size_7,size_7h=size_7h,size_8=size_8,size_8h=size_8h
+                                      ,size_9=size_9,size_9h=size_9h,size_10=size_10,size_10h=size_10h,size_11=size_11
+                                      ,size_S=size_S,size_M=size_M,size_L=size_L,size_XL=size_XL,size_XXL=size_XXL)
+        ps.save()
+
+
         return super().form_valid(form)
+    
+class AdminProductDeleteView(AdminRequiredMixin,TemplateView):
+    def get(self,request,*args,**kwargs):
+        product_id=self.kwargs['pk']
+        product_obj=Product.objects.get(id=product_id)
+        product_obj.delete()
+        return redirect('ecomapp:adminproductlist')
+ 
+
+def filter_product(request):
+    categories_id=request.GET.getlist('category[]')
+    productline=request.GET.getlist('productline[]')
+    product_sex=request.GET.getlist('product_sex[]')
+
+    products=Product.objects.all().distinct()
+
+    if len(categories_id) > 0:
+        products=products.filter(category__id__in=categories_id).distinct()
+    if len(productline) > 0:
+        products=products.filter(line__in=productline).distinct()
+    if len(product_sex) > 0:
+        products=products.filter(sex__in=product_sex).distinct()
+
+    if request.user.is_authenticated:
+        if WishList.objects.filter(customer=request.user.customer).exists():
+            wishlist=WishList.objects.get(customer=request.user.customer)
+            product_in_wishlist = []
+            for i in wishlist.wishlistitem_set.all():
+                product_in_wishlist.append(i.product)
+            
+            context={'wishlist':wishlist}   
+            context={'product_in_wishlist':product_in_wishlist}
+        
+
+    context={'products':products}
+    data=render_to_string("async/product-list.html",context)
+    return JsonResponse({'data':data})
+

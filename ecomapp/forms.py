@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order,Customer,Product
+from .models import Order,Customer,Product,ProductSize
 from django.contrib.auth.models import User
 
 
@@ -77,7 +77,7 @@ class ProductForm(forms.ModelForm):
    
     class Meta:
         model=Product
-        fields=['title','slug','category','thumbnail','marked_price','selling_price','description','warranty','return_policy']
+        fields=['title','slug','category','thumbnail','marked_price','selling_price','description','line']
         widgets={
             'title':forms.TextInput(attrs={
                 'class':'form-control'
@@ -102,13 +102,37 @@ class ProductForm(forms.ModelForm):
                 'class':'form-control',
                 'rows': 5
             }),
-            'warranty':forms.TextInput(attrs={
+            'line':forms.TextInput(attrs={
                 'class':'form-control'
             }),
-            'return_policy':forms.TextInput(attrs={
-                'class':'form-control'
-            }),
+            
         }
+
+# class ProductSizeForm(forms.ModelForm):
+#     class Meta:
+#         model=ProductSize
+#         fields=['product','size_6','size_6h','size_7','size_7h','size_8','size_8h','size_9','size_9h','size_10','size_10h','size_11']
+#         widgets={
+#             'product':forms.Select(attrs={
+#                 'class':'form-control'
+#             }),
+#             'size_6':forms.BooleanField(initial=True),
+#             'size_6h':forms.BooleanField(initial=True),
+#             'size_7':forms.BooleanField(initial=True),
+#             'size_7h':forms.BooleanField(initial=True),
+#             'size_8':forms.BooleanField(initial=True),
+#             'size_8h':forms.BooleanField(initial=True),
+#             'size_9':forms.BooleanField(initial=True),
+#             'size_9h':forms.BooleanField(initial=True),
+#             'size_10':forms.BooleanField(initial=True),
+#             'size_10h':forms.BooleanField(initial=True),
+#             'size_11':forms.BooleanField(initial=True),
+            
+            
+#         }
+
+
+
 
 class PasswordForgotForm(forms.Form):
     email=forms.CharField(widget=forms.EmailInput(attrs={

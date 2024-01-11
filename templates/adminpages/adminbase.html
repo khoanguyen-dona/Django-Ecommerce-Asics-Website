@@ -7,10 +7,11 @@
     <title>{% block title %} {% endblock %} </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{%  static 'css/base.css' %}"  type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <header>
     <a href="{%  url 'ecomapp:adminhome' %}"> <h2 class="text-center pt-3 text-white" >   Admin Page </h2> </a>
-    <a href="{% url 'ecomapp:adminproductlist' %}" class="float-left text-white ml-5" >Admin product list</a>
+    <a href="{% url 'ecomapp:adminproductlist' %}" class="float-left text-white ml-5" >Product list</a>
     <a href="{% url 'ecomapp:home' %}" target="_blank" class="float-right text-white mr-5 ">Back to website --></a>
 </header>
 {% if messages %}

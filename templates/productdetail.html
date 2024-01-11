@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
-{% block title %}{{product.title}}{% endblock %}
+{% block title %}{{product.title}}{% endblock title %}
 
 {% block content %}
 <style>
-
 .images{
-    /* object-fit:cover; */
-    /* max-width:200px;
-    max-height:100px; */
     cursor:pointer;
     opacity:0.5;
     margin: 5px;
@@ -22,31 +18,23 @@
     opacity:1;
 }
 
-
-
-
-
 </style>
 
-
-
-
 <div class=" container" > 
-    
-    
+     
     <div class="row mt-5" >
         
-        <div class="col-md-7 card-border productdetail-thumbnail " >
+        <div class="col-md-7 card-border productdetail-thumbnail col-sm-12 m-2" >
             <img id="thumbnail" class="productdetail-main-img img-fluid mt-3" src="{{product.thumbnail.url}}" alt="">
             <div class="row " >
                 
-                <div class="col-md-2" >
+                <div class="col-md-2 col-2 " >
                     <a href="{{product.thumbnail.url}}" >
                         <img class="images active img-fluid"  src="{{product.thumbnail.url}}"  >
                     </a>
                 </div>
                 {% for pi in product.productimage_set.all %}
-                <div class="col-md-2 " >
+                <div class="col-md-2 col-2" >
                     <a href="{{pi.image.url}}" >
                         <img  class="images img-fluid"  src="{{pi.image.url}}" alt="" >
                     </a>
@@ -57,38 +45,161 @@
             
 
 
-        <div class="col-md-4 productdetail-desc  card-border py-2" >
+        <div class="col-md-4  productdetail-desc  card-border py-2 col-sm-12 m-2" >
             <h4>{{product.title}}  </h4>
+            {% if product.sex == True %}
+            <h6>Nam</h6>
+            {% else  %}
+            <h6>Nữ</h6>
+            {% endif %}
             <p>(Viewed:{{product.view_count}}times)</p>
-            <h5>Category : {{product.category}}</h5>
+            <!-- <h5>Category : {{product.category}}</h5> -->
             <h5>Price :<small> <strike>{{product.marked_price|intcomma}}</strike></small> <strong>{{product.selling_price|intcomma}} đ</strong> </h5>
-            <a href="{% url 'ecomapp:addtocart'  product.id %}" style="width:75%;"  class="btn btn-outline-primary" >Add to cart</a>
+            <a href="{% url 'ecomapp:addtocart'  product.id  %}?s=" id="addtocart"     style="width:75%;"    class="btn btn-outline-primary" >Add to cart</a>
 
+            {% if product in product_in_wishlist %}
+            <a  class=" ml-3 add-to-wishlist ">
+                <img   class="heart-icon-product-detail "  src="{% static 'icon/red-heart-icon.png' %}" alt="">
+            </a>
+            {% else %}
             <a href="{% url 'ecomapp:addtowishlist'  product.id %}" class=" ml-3 add-to-wishlist ">
                 <img   class="heart-icon-product-detail "  src="{% static 'icon/black-heart-icon.png' %}" alt="">
             </a>
+            {% endif %}
+            <hr>
 
-            <hr>
-            <p>Warranty:{{product.warranty}} </p>
-            <p>Return policy:{{product.return_policy}}</p>
-            <hr>
-            <p>{{product.description}}</p>
+            <p id="size-chosen">Kích thước (US) :</p>
+
+            {% if product.category.title == 'shoes' %}
+
+            {% if product.productsize.size_6 == True %}
+            <div class="product-size-number-true product-size " value="6">6</div>
+            {% else %} 
+            <div class="product-size-number-false  " >6</div>
+            {%  endif %} 
+
+            {% if product.productsize.size_6h == True %}
+            <div class="product-size-number-true product-size" value="6h">6h</div>
+            {% else %} 
+            <div class="product-size-number-false " >6h</div>
+            {%  endif %} 
+
+            {% if product.productsize.size_7 == True %}
+            <span class="product-size-number-true product-size" value="7">7</span>
+            {% else %} 
+            <span class="product-size-number-false " >7</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_7h == True %}
+            <span class="product-size-number-true product-size" value="7h">7h</span>
+            {% else %} 
+            <span class="product-size-number-false " >7h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_8 == True %}
+            <span class="product-size-number-true product-size" value="8">8</span>
+            {% else %} 
+            <span class="product-size-number-false " >8</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_8h == True %}
+            <span class="product-size-number-true product-size" value="8h">8h</span>
+            {% else %} 
+            <span class="product-size-number-false " >8h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_9 == True %}
+            <span class="product-size-number-true product-size" value="9">9</span>
+            {% else %} 
+            <span class="product-size-number-false " >9</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_9h == True %}
+            <span class="product-size-number-true product-size" value="9h">9h</span>
+            {% else %} 
+            <span class="product-size-number-false " >9h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_10 == True %}
+            <span class="product-size-number-true product-size" value="10">10</span>
+            {% else %} 
+            <span class="product-size-number-false " >10</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_10h == True %}
+            <span class="product-size-number-true product-size" value="10h">10h</span>
+            {% else %} 
+            <span class="product-size-number-false " >10h</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_11 == True %}
+            <span class="product-size-number-true product-size" value="11">11</span>
+            {% else %} 
+            <span class="product-size-number-false ">11</span>
+            {%  endif %} 
+
+            {% endif %}
+
+
+
+            {% if product.category.title == 'shirts' or product.category.title == 'pants' or product.category.title == 'socks' %}
+            
+            
+            {% if product.productsize.size_S == True %}
+            <span class="product-size-number-true product-size" value="S">S</span>
+            {% else %} 
+            <span class="product-size-number-false ">S</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_M == True %}
+            <span class="product-size-number-true product-size" value="M">M</span>
+            {% else %} 
+            <span class="product-size-number-false ">M</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_L == True %}
+            <span class="product-size-number-true product-size" value="L">L</span>
+            {% else %} 
+            <span class="product-size-number-false ">L</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_XL == True %}
+            <span class="product-size-number-true product-size" value="XL">XL</span>
+            {% else %} 
+            <span class="product-size-number-false ">XL</span>
+            {%  endif %} 
+
+            {% if product.productsize.size_XXL == True %}
+            <span class="product-size-number-true product-size" value="XXL">XXL</span>
+            {% else %} 
+            <span class="product-size-number-false ">11</span>
+            {%  endif %} 
+
+            {% endif %}
+            
+           
+
+            <p class="mt-5 mb-0"><b>Miễn phí</b> vận chuyển cho đơn hàng trên 1.500.000đ</p>
+            <p class="mb-0" ><b>Dễ dàng</b> hoàn trả hàng <a href="#">Xem thêm</a>  </p>
+            <p class="mb-0" ><b> Tham gia OneAsic</b> ngay để được miễn phí vận chuyển tất cả đơn hàng</p>
+            <p class="mb-0" >Sale lớn 30%-70% <a href="#">Mua ngay</a> </p>
+            
+            
+        </div>
+    </div>
+    <div class="row">
+        <div  class="col-md-12 sub-desc-outer m-2">  
+            <div class="sub-desc bg-white p-2  card-border" >
+                <b>Thông tin sản phẩm</b>
+                <div>{{product.description}}</div>
+            </div>     
         </div>
     </div>
 
 </div>
-
-
-
-<div class="sub-desc-outer" >
-    <div class="sub-desc" >
-        <div>Thông tin sản phẩm</div>
-        <div>Đặc điểm kĩ thuật</div>
-    </div>
-</div>
-
-
-
+    
+    
+<!-- hover hình -->
 <script  type="text/javascript">
     let images=document.getElementsByClassName('images')
     let activeImages=document.getElementsByClassName('active')
@@ -102,7 +213,53 @@
             document.getElementById('thumbnail').src=this.src
         })
     }
+
+
+</script>
+<!-- chọn size,thay đổi link.href để gửi qua backend -->
+<script type="text/javascript" >
     
+    let productSize=document.getElementsByClassName('product-size')
+    
+    let productChosen=document.getElementsByClassName('product-active')
+    let link =document.getElementById('addtocart') 
+    console.log(link.href)
+    // size.length=undefined
+    var size=5
+    for(var i=0;i<productSize.length; i++){
+        productSize[i].addEventListener('click',function(e){
+            if(productChosen.length>0){
+                productChosen[0].classList.remove('product-active')
+            }
+            this.classList.add('product-active') 
+
+            // link.href thay đổi theo click
+            if (size.length==1){
+                link.href=link.href.substring(0,link.href.length-1)
+            }
+            if(size.length==2){
+                link.href=link.href.substring(0,link.href.length-2)
+            }
+            if(size.length==3){
+                link.href=link.href.substring(0,link.href.length-3)
+            }
+            
+            size=e.target.innerHTML 
+            console.log('size length là:',size.length)
+            link.href=link.href.concat(size)
+            console.log('link href là :',link.href)
+            // hiển thị size khi click vào ở id size-chosen    
+            var sizeChosen=document.getElementById('size-chosen').innerHTML
+            sizeChosen="Kích thước (US) :"
+            sizeChosen+=" "+size
+            document.getElementById('size-chosen').innerHTML=sizeChosen
+            console.log(sizeChosen)
+            
+        })
+    } 
+
 </script>
 
+
 {% endblock content %} 
+

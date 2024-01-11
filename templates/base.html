@@ -13,10 +13,10 @@
 <!-- header -->
 <header >
     <div class="container  " >
-        <a href="{% url 'ecomapp:home' %}"  class="text-white ">Home </a>
+        <a href="{% url 'ecomapp:home' %}"  class="text-white "><img style="width:30px;" src="{% static 'images/logo-asics.png' %}" alt=""> <strong class >ASICS </strong> </a>
         <a href="{% url 'ecomapp:about'  %}" class="text-white ml-2">About us </a>
         <a href="{% url 'ecomapp:contact' %}"class="text-white ml-2">Contact us </a>
-        <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a>
+        <!-- <a href="{% url 'ecomapp:allproducts' %}"class="text-white ml-2">Categories </a> -->
         {% if cart.count %}
         <a href="{% url 'ecomapp:mycart' %}"class="ml-2"> 
             <span>
@@ -97,8 +97,105 @@
 </script>   
   
 <!-- footer -->
-<footer>
 
+<footer>
+    <div class="row" >
+        <div class="col-md-3 col-10  ml-5 mt-3" >
+            <span class="text-white " >
+                <b>ĐĂNG KÝ NHẬN BẢN TIN TỪ ASICS</b><br><br>
+                <b>Trở thành người đầu tiên nhận thông tin về sản phẩm mới, sự kiện độc quyền, ưu đãi trực tuyến.</b><br><br>
+                <p>Bằng cách đăng ký, bạn đồng ý nhận các bản tin, email thông tin về sản phẩm, dịch vụ, sự kiện, điện thoại
+                     và tin nhắn, cũng như đồng ý với Khoản và Điều Kiện và Chính Sách Quyền Riêng Tư.</p>
+                <hr class="bg-white">
+                <p>KẾT NỐI VỚI ASICS TẠI</p><br>
+                <span>
+                    <a href="https://www.facebook.com/asicsvietnamofficial" target="_blank" >
+                        <img class="facebook-icon"  src="{% static 'icon/facebook.png' %}"  alt="">
+                    </a>
+                    <a href="https://www.instagram.com/asicsvn/" target="_blank" >
+                        <img class="instagram-icon"  src="{% static 'icon/instagram.png' %}"  alt="">
+                    </a>
+                </span>
+            </span>        
+        </div>
+        <div class="col-md-2 col-5 ml-5 mt-3 " >
+            <span  class="text-white">
+
+                <p>GIỚI THIỆU</p>
+                <p class="mb-0" >Về ASICS</p>
+                <p class="mb-0" >Điều khoản và Điều kiện</p>
+                <p class="mb-0"  >Chính sách Cookie</p>
+                <p class="mb-0" >Miễn trừ trách nhiệm</p>
+                <p class="mb-0" >Chính sách Quyền Riêng Tư</p>
+            </span>
+
+        </div>
+        <div class="col-md-2 col-5 mt-3" >
+            <div class="text-white" >
+                <p>CHĂM SÓC KHÁCH HÀNG</p>
+                <p class="mb-0">Liên hệ</p>
+                <p class="mb-0">Chính sách đổi trả hàng</p>
+                <p class="mb-0">Chính sách giao hàng</p>
+                <p class="mb-0">Chính sách thanh toán</p>
+                <p class="mb-0">Câu hỏi thường gặp</p>
+                <p class="mb-0">Vị trí cửa hàng</p>
+                <p class="mb-0">Bảo hành</p>
+                <p class="mb-0">Kiểm tra hàng hóa</p>
+                <p>Hướng dẫn mua hàng</p>
+            </div>
+        </div>
+
+
+        <div class="col-md-2 col-5  mt-3" >
+            <div class="text-white" >
+                <p>HƯỚNG DẪN KÍCH THƯỚC</p>
+                <p class="mb-0">Hướng dẫn kích thước giày</p>
+                <p class="mb-0">Hướng dẫn độ rộng giày</p>
+                <p class="mb-0">Hướng dẫn độ lệch bàn chân</p>
+                <p>Hướng dẫn kích thước áo quần</p>
+            </div>    
+        </div>
+        <div class="col-md-2 col-5 mt-3" >
+            <div class="text-white " >
+                <p>SẢN PHẨM</p>
+                <p class="mb-0">Sản phẩm mới</p>
+                <p class="mb-0">Sản phẩm bán chạy</p>
+                <p class="mb-0">Sản phẩm độc quyền</p>
+                <p class="mb-0">Giày</p>
+                <p class="mb-0">Quần áo</p>
+                <p class="mb-0">Phụ kiện</p>
+                <p>Ưu đãi</p>
+            </div>    
+        </div>
+    </div>
+    <div class="row mt-5" >
+        <div class="col-md-12 text-white " >
+            <div class="ml-5">
+
+                <p>THÔNG TIN VỀ CHỦ TRANG WEB  </p>
+                <p>Công ty trách nhiệm hữu hạn ASICS Việt Nam được thành lập theo Giấy chứng nhận đăng ký doanh nghiệp số 0315898690, đăng ký lần đầu ngày 13 tháng 09 năm 2019, thay đổi lần thứ 3 ngày 03 tháng 11 năm 2021 do Phòng Đăng ký kinh doanh, Sở Kế hoạch và Đầu tư Thành phố Hồ Chí Minh cấp.</p>
+                <p>Giấy phép kinh doanh số 0315898690-KD0437, cấp lần đầu ngày 7 tháng 11 năm 2019, điều chỉnh lần thứ nhất ngày 5 tháng 4 năm 2021 do Sở Công Thương Thành phố Hồ Chí Minh cấp.</p>
+                <p>Giấy phép thành lập cơ sở bán lẻ số 0315898690/KD-0437/03.001, cấp lần đầu ngày 14 tháng 11 năm 2019, gia hạn lần thứ nhất ngày 08 tháng 08 năm 2022 do Sở Công Thương Thành phố Hồ Chí Minh cấp.</p>
+                <p class="mb-0">Địa chỉ trụ sở chính: Saigon Centre, Lô L2-26-29, 67 Lê Lợi, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh, Việt Nam.</p>
+                <p class="mb-0">Người đại diện theo pháp luật: Ông Gandhi Yogesh</p>
+                <p >E-mail: customers-vn@asics.com</p>
+            </div>
+        </div>
+    </div>   
 </footer>
+
+<div  class="under-footer" >
+    <div class="row ">
+        <div class="col-md-6 ml-5 mt-2" >
+            <div><b> © 2023 ASICS Vietnam LLC Bảo lưu mọi quyền. </b> </div>
+        </div> 
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-3 mt-2 " >
+            <div><b><img src="{% static 'images/shoes-logo-new.png' %}" alt=""> Thiết kế sọc trên hai bên giày ASICS® là nhãn hiệu đã đăng ký của Tập đoàn ASICS.</b> </div>
+        </div>
+    </div>
+</div>
 
 </html>
