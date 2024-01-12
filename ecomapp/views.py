@@ -937,10 +937,11 @@ class AdminProductCreateView(AdminRequiredMixin,CreateView):
     
 class AdminProductDeleteView(AdminRequiredMixin,TemplateView):
     def get(self,request,*args,**kwargs):
+        pre_url = request.META.get('HTTP_REFERER')
         product_id=self.kwargs['pk']
         product_obj=Product.objects.get(id=product_id)
         product_obj.delete()
-        return redirect('ecomapp:adminproductlist')
+        return redirect(pre_url)
  
 
 def filter_product(request):
